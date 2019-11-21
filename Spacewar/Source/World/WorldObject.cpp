@@ -4,6 +4,7 @@ WorldObject::WorldObject()
 	: mPosition()
 	, mRotation(0.0f)
 	, mShape(nullptr)
+	, mIsPhysicsEnabled(false)
 {
 }
 
@@ -14,10 +15,9 @@ WorldObject::~WorldObject()
 
 void WorldObject::Update(const float deltaTime)
 {
-	bool bIsUpdatePhysics = true;
-	if (bIsUpdatePhysics)
+	if (mIsPhysicsEnabled)
 	{
-		mPosition += mVelocity * deltaTime;
+		UpdatePhysics(deltaTime);
 	}
 	UpdateShape();
 }
@@ -52,6 +52,16 @@ float WorldObject::GetRotation() const
 	return mRotation;
 }
 
+void WorldObject::SetIsPhysicsEnabled(bool isEnablePhysics)
+{
+	mIsPhysicsEnabled = isEnablePhysics;
+}
+
+bool WorldObject::GetIsPhysicsEnabled() const
+{
+	return mIsPhysicsEnabled;
+}
+
 const sf::Shape* WorldObject::GetShape() const
 {
 	return mShape;
@@ -65,4 +75,9 @@ void WorldObject::UpdateShape()
 		mShape->setPosition(mPosition.X, mPosition.Y);
 		mShape->setRotation(mRotation);
 	}
+}
+
+void WorldObject::UpdatePhysics(const float deltaTime)
+{
+	mPosition += mVelocity * deltaTime;
 }

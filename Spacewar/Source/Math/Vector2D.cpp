@@ -42,44 +42,42 @@ float Vector2D::DotProd(const Vector2D & otherVec) const
 	return result;
 }
 
-Vector2D & Vector2D::operator+=(const Vector2D & rhs)
+float Vector2D::Angle()
+{
+	return 0.0f;
+}
+
+Vector2D& Vector2D::operator+=(const Vector2D & rhs)
 {
 	X += rhs.X;
 	Y += rhs.Y;
 	return *this;
 }
 
-Vector2D & Vector2D::operator-=(const Vector2D & rhs)
+Vector2D& Vector2D::operator-=(const Vector2D & rhs)
 {
 	X -= rhs.X;
 	Y -= rhs.Y;
 	return *this;
 }
 
-Vector2D & Vector2D::operator*=(const Vector2D & rhs)
+Vector2D& Vector2D::operator*=(const float scalar)
 {
-	X *= rhs.X;
-	Y *= rhs.Y;
+	X *= scalar;
+	Y *= scalar;
 	return *this;
 }
 
-Vector2D & Vector2D::operator/=(const Vector2D & rhs)
+Vector2D& Vector2D::operator/=(const float scalar)
 {
-	X /= rhs.X;
-	Y /= rhs.Y;
+	X /= scalar;
+	Y /= scalar;
 	return *this;
 }
 
-Vector2D operator+(Vector2D& lhs, const Vector2D& rhs)
+Vector2D operator+(const Vector2D& lhs, const Vector2D& rhs)
 {
-	lhs.X += rhs.X;
-	lhs.Y += rhs.Y;
-	return lhs;
-}
-
-Vector2D operator+=(const Vector2D & lhs, const Vector2D & rhs)
-{
-	return Vector2D();
+	return Vector2D(lhs.X + rhs.X, lhs.Y + rhs.Y);
 }
 
 Vector2D operator-(const Vector2D& lhs, const Vector2D& rhs)

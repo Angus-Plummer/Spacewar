@@ -6,9 +6,14 @@ class SpaceShip : public WorldObject
 public:
 	SpaceShip();
 
+
 	// TODO: various functions for movement + firing
 
-private:
+protected:
 	int mAmmo;
 	float mHealth;
+
+	virtual void SetupShape() override;
+
+	virtual void UpdatePhysics(const float deltaTime) override;
 };

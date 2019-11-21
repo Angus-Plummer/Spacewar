@@ -21,17 +21,21 @@
   <ItemGroup>
     <ClCompile Include="Source\Controller.cpp" />
     <ClCompile Include="Source\GameInstance.cpp" />
-    <ClCompile Include="Source\GameState.cpp" />
+    <ClCompile Include="Source\GameMode.cpp" />
     <ClCompile Include="Source\Math\Vector2D.cpp" />
     <ClCompile Include="Source\Spacewar.cpp" />
+    <ClCompile Include="Source\World\Attractor.cpp" />
+    <ClCompile Include="Source\World\World.cpp" />
     <ClCompile Include="Source\World\WorldObject.cpp" />
     <ClCompile Include="Source\World\SpaceShip.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Controller.h" />
     <ClInclude Include="Source\GameInstance.h" />
-    <ClInclude Include="Source\GameState.h" />
+    <ClInclude Include="Source\GameMode.h" />
     <ClInclude Include="Source\Math\Vector2D.h" />
+    <ClInclude Include="Source\World\Attractor.h" />
+    <ClInclude Include="Source\World\World.h" />
     <ClInclude Include="Source\World\WorldObject.h" />
     <ClInclude Include="Source\World\SpaceShip.h" />
   </ItemGroup>

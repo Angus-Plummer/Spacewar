@@ -9,7 +9,7 @@ public:
 	WorldObject();
 	~WorldObject();
 
-	void Update(const float deltaTime);
+	virtual void Update(const float deltaTime);
 
 	void SetPosition(const Vector2D& newPos);
 	Vector2D GetPosition() const;
@@ -20,9 +20,13 @@ public:
 	void SetRotation(float newRot);
 	float GetRotation() const;
 
+	void SetIsPhysicsEnabled(bool isEnablePhysics);
+	bool GetIsPhysicsEnabled() const;
+
 	const sf::Shape* GetShape() const;
 
 protected:
+	bool mIsPhysicsEnabled;
 	Vector2D mPosition;
 	Vector2D mVelocity;
 
@@ -30,6 +34,8 @@ protected:
 	// float mAngularVelocity;
 
 	sf::Shape* mShape;
+	virtual void SetupShape() = 0;
 
-	void UpdateShape();
+	virtual void UpdateShape();
+	virtual void UpdatePhysics(const float deltaTime);
 };

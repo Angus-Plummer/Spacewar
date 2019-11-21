@@ -1,6 +1,7 @@
 #include "GameInstance.h"
+#include "GameMode.h"
+#include "World/World.h"
 #include "World/WorldObject.h"
-#include "GameState.h"
 
 GameInstance::GameInstance()
 	: mIsRunning(false)
@@ -24,8 +25,8 @@ void GameInstance::Initialise()
 	mGameWindow = new sf::RenderWindow(sf::VideoMode(1280, 720), "Spacewar!", sf::Style::Default, settings);
 	mGameWindow->setFramerateLimit(60);
 
-	// Initialise Game State
-	mGameState = new GameState();
+	// Initialise Game Mode
+	mGameState = new GameMode();
 	mGameState->Initialise();
 }
 
@@ -46,7 +47,7 @@ void GameInstance::Update(const float deltaTime)
 		mGameWindow->clear();
 
 		mGameState->Update(deltaTime);
-		DrawGameObjects(); // TODO: move this to separate gamestate observer class
+		DrawGameObjects(); // TODO: move this to separate world observer class
 
 		mGameWindow->display();
 	}
@@ -54,7 +55,8 @@ void GameInstance::Update(const float deltaTime)
 
 void GameInstance::DrawGameObjects()
 {
-	const std::vector<WorldObject*>& gameObjects = mGameState->GetGameObjects();
+	World* gameWorld = mGameState->GetWorld();
+	std::vector<const WorldObject*> gameObjects = gameWorld->GetWorldObjects();
 	for (int i = 0; i < gameObjects.size(); i++)
 	{
 		const WorldObject* currentGameObject = gameObjects[i];

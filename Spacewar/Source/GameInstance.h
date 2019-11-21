@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 
 class WorldObject;
-class GameState;
+class GameMode;
 
 class GameInstance
 {
@@ -18,5 +18,5 @@ public:
 private:
 	bool mIsRunning;
 	sf::RenderWindow* mGameWindow;
-	GameState* mGameState;
+	GameMode* mGameState;
 };

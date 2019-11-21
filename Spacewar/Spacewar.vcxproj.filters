@@ -27,9 +27,6 @@
     <ClCompile Include="Source\GameInstance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Spacewar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -42,15 +39,21 @@
     <ClCompile Include="Source\World\WorldObject.cpp">
       <Filter>Source Files\World</Filter>
     </ClCompile>
+    <ClCompile Include="Source\World\World.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameMode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\World\Attractor.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Controller.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameInstance.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Math\Vector2D.h">
@@ -60,6 +63,15 @@
       <Filter>Source Files\World</Filter>
     </ClInclude>
     <ClInclude Include="Source\World\WorldObject.h">
+      <Filter>Source Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\World\World.h">
+      <Filter>Source Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameMode.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\World\Attractor.h">
       <Filter>Source Files\World</Filter>
     </ClInclude>
   </ItemGroup>
