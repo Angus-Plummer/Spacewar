@@ -39,18 +39,6 @@ void World::AddShip(SpaceShip * newShip)
 	mShips.push_back(newShip);
 }
 
-/*
-void World::DestroyObject(WorldObject * objectToDestroy)
-{
-	// TODO: optimise this
-	std::vector<WorldObject*>::iterator item = std::find(mWorldObjects.begin(), mWorldObjects.end(), objectToDestroy);
-	if (item != mWorldObjects.end())
-	{
-		delete *item;
-		mWorldObjects.erase(item);
-	}
-}*/
-
 void World::UpdateWorldObjects(const float deltaTime)
 {
 	for (int i = 0; i < mAttractors.size(); i++)
@@ -95,19 +83,4 @@ void World::ApplyPhysics(const float deltaTime)
 	}
 	// remove dead ships
 	mShips.erase(std::remove_if(mShips.begin(), mShips.end(), [](SpaceShip* ship) {return (!ship->IsAlive()); }), mShips.end());
-}
-
-std::vector<const WorldObject*> World::GetWorldObjects() const
-{
-	//  TODO: this is inefficient. Find better way of doing this
-	std::vector<const WorldObject*> allWorldObjects;
-	for (int i = 0; i < mAttractors.size(); i++)
-	{
-		allWorldObjects.push_back(mAttractors[i]);
-	}
-	for (int i = 0; i < mShips.size(); i++)
-	{
-		allWorldObjects.push_back(mShips[i]);
-	}
-	return allWorldObjects;
 }

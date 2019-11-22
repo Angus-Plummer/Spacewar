@@ -43,7 +43,7 @@ void GameMode::Initialise()
 	//playerController->SetShip(playerShip);
 
 	// create the star
-	Attractor* star = new Attractor(1000000.0f, 10.0f);
+	Attractor* star = new Attractor(1.0f, 10.0f);
 	star->SetPosition(Vector2D(1280.0f / 2.0f, 720.0f / 2.0f));
 	mWorld->AddAttractor(star);
 }

@@ -1,17 +1,18 @@
 #include "WorldObject.h"
 #include "../GameInstance.h"
 
-WorldObject::WorldObject() 
+WorldObject::WorldObject()
 	: mPosition()
 	, mRotation(0.0f)
-	, mShape(nullptr)
 	, mIsPhysicsEnabled(false)
+	, mModel(nullptr)
+	, mMass(1.0f)
 {
 }
 
 WorldObject::~WorldObject()
 {
-	delete mShape;
+	delete mModel;
 }
 
 void WorldObject::Update(const float deltaTime)
@@ -20,7 +21,11 @@ void WorldObject::Update(const float deltaTime)
 	{
 		UpdatePhysics(deltaTime);
 	}
-	UpdateShape();
+	UpdateVisual();
+
+	// TODO : move this drawing out to another class which iterates through all Drawables and draws
+	sf::RenderWindow* gameWindow = GameInstance::GetGameWindow();
+	Draw(gameWindow);
 }
 
 void WorldObject::SetPosition(const Vector2D& newPos)
@@ -41,6 +46,16 @@ void WorldObject::SetVelocity(const Vector2D & newVel)
 Vector2D WorldObject::GetVelocity() const
 {
 	return mVelocity;
+}
+
+void WorldObject::SetMass(float newMass)
+{
+	mMass = newMass;
+}
+
+float WorldObject::GetMass() const
+{
+	return mMass;
 }
 
 void WorldObject::AddForce(const Vector2D & force)
@@ -68,37 +83,35 @@ bool WorldObject::GetIsPhysicsEnabled() const
 	return mIsPhysicsEnabled;
 }
 
-const sf::Shape* WorldObject::GetShape() const
+void WorldObject::UpdatePhysics(const float deltaTime)
 {
-	return mShape;
+	mVelocity += mPendingForce / mMass * deltaTime;
+	mPendingForce = Vector2D();
+	mPosition += mVelocity * deltaTime;
 }
 
-void WorldObject::Draw()
+void WorldObject::Draw(sf::RenderWindow* drawWindow)
 {
-	sf::RenderWindow* drawWindow = GameInstance::GetGameWindow();
 	if (drawWindow)
 	{
-		if (mShape)
+		if (mModel)
 		{
-			drawWindow->draw(*mShape);
+			drawWindow->draw(*mModel);
 		}
 	}
 }
 
-void WorldObject::UpdateShape()
+void WorldObject::UpdateVisual()
 {
 	// set the underlying drawn shape's properties to those of the game object
-	if (mShape)
+	if (mModel)
 	{
-		mShape->setPosition(mPosition.X, mPosition.Y);
-		mShape->setRotation(mRotation);
+		mModel->setPosition(mPosition.X, mPosition.Y);
+		mModel->setRotation(mRotation);
 	}
-	Draw();
 }
 
-void WorldObject::UpdatePhysics(const float deltaTime)
+void WorldObject::SetupVisual()
 {
-	mVelocity += mPendingForce * deltaTime;
-	mPendingForce = Vector2D();
-	mPosition += mVelocity * deltaTime;
+	mModel = GenerateModel();
 }

@@ -5,7 +5,8 @@ Attractor::Attractor()
 	, mAttractionFactor(0.0f)
 	, mDeathDistance(0.0f)
 {
-	SetupShape();
+	mMass = 10000000.0f;
+	SetupVisual();
 }
 
 Attractor::Attractor(float attractionFactor, float deathDistance)
@@ -13,7 +14,8 @@ Attractor::Attractor(float attractionFactor, float deathDistance)
 	, mAttractionFactor(attractionFactor)
 	, mDeathDistance(deathDistance)
 {
-	SetupShape();
+	mMass = 1000000.0f;
+	SetupVisual();
 }
 
 void Attractor::SetAttractionFactor(float newAttractionFactor)
@@ -42,19 +44,27 @@ void Attractor::ApplyForce(WorldObject* otherObject)
 	Vector2D deltaPos = otherObject->GetPosition() - mPosition;
 	Vector2D curVel = otherObject->GetVelocity();
 	float distance = deltaPos.Magnitude();
+	float otherMass = otherObject->GetMass();
 
-	float forceMag = -(mAttractionFactor / (distance * distance)); // assuming mass of 1
+	float forceMag = -(mAttractionFactor * mMass * otherMass / (distance * distance));
 	Vector2D force = deltaPos.Normalised() * forceMag;
 
 	otherObject->AddForce(force);
 }
 
-void Attractor::SetupShape()
+void Attractor::Draw(sf::RenderWindow* drawWindow)
 {
+	WorldObject::Draw(drawWindow);
+	// extra visual effects
+}
+
+sf::Shape* Attractor::GenerateModel() const
+{	
+	sf::CircleShape* attractorShape = new sf::CircleShape(mDeathDistance, 30);
 	// create spaceship shape and assign to drawn shape
-	mShape = new sf::CircleShape(mDeathDistance, 30);
-	mShape->setFillColor(sf::Color::White);
-	mShape->setOutlineThickness(-1.0f); // outline from edge towards centre
-	mShape->setOutlineColor(sf::Color(255, 255, 255));
-	mShape->setOrigin(mDeathDistance /2.0f, mDeathDistance /2.0f);
+	attractorShape->setFillColor(sf::Color::White);
+	attractorShape->setOutlineThickness(-1.0f); // outline from edge towards centre
+	attractorShape->setOutlineColor(sf::Color(255, 255, 255));
+	attractorShape->setOrigin(mDeathDistance / 2.0f, mDeathDistance / 2.0f);
+	return attractorShape;
 }

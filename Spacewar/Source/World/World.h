@@ -16,10 +16,6 @@ public:
 	void AddAttractor(Attractor* newAttractor);
 	void AddShip(SpaceShip* newShip);
 
-	void DestroyObject(WorldObject* objectToDestroy);
-
-	std::vector<const WorldObject*> GetWorldObjects() const; // for observers
-
 protected:
 	std::vector<Attractor*> mAttractors;
 	std::vector<SpaceShip*> mShips;

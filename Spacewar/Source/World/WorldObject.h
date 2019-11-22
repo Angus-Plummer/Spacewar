@@ -1,9 +1,9 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 #include "../Math/Vector2D.h"
+#include "../Drawable.h"
 
-// class for game objects which are drawn on the screen
-class WorldObject
+// class for game objects which exist physically in the world
+class WorldObject : public Drawable
 {
 public:
 	WorldObject();
@@ -17,6 +17,9 @@ public:
 	void SetVelocity(const Vector2D& newVel);
 	Vector2D GetVelocity() const;
 
+	void SetMass(float newMass);
+	float GetMass() const;
+
 	void AddForce(const Vector2D& force);
 
 	void SetRotation(float newRot);
@@ -25,11 +28,9 @@ public:
 	void SetIsPhysicsEnabled(bool isEnablePhysics);
 	bool GetIsPhysicsEnabled() const;
 
-	const sf::Shape* GetShape() const;
-	void Draw();
-
 protected:
 	bool mIsPhysicsEnabled;
+	float mMass;
 	Vector2D mPosition;
 	Vector2D mVelocity;
 	Vector2D mPendingForce;
@@ -37,9 +38,14 @@ protected:
 	float mRotation;
 	// float mAngularVelocity;
 
-	sf::Shape* mShape;
-	virtual void SetupShape() = 0;
-
-	virtual void UpdateShape();
 	virtual void UpdatePhysics(const float deltaTime);
+
+	// Drawable Implementation. Uses just one shape for primary object shape
+public:
+	virtual void Draw(sf::RenderWindow* drawWindow) override;
+protected:
+	sf::Shape* mModel; // main visual components
+	virtual void UpdateVisual();
+	virtual void SetupVisual();
+	virtual sf::Shape* GenerateModel() const = 0; // generate model, can include randomness
 };
