@@ -25,7 +25,7 @@
     <ClCompile Include="Source\Math\Vector2D.cpp" />
     <ClCompile Include="Source\Spacewar.cpp" />
     <ClCompile Include="Source\World\Attractor.cpp" />
-    <ClCompile Include="Source\World\SpaceShipDebris.cpp" />
+    <ClCompile Include="Source\World\Debris.cpp" />
     <ClCompile Include="Source\World\World.cpp" />
     <ClCompile Include="Source\World\WorldObject.cpp" />
     <ClCompile Include="Source\World\SpaceShip.cpp" />
@@ -37,7 +37,7 @@
     <ClInclude Include="Source\GameMode.h" />
     <ClInclude Include="Source\Math\Vector2D.h" />
     <ClInclude Include="Source\World\Attractor.h" />
-    <ClInclude Include="Source\World\SpaceShipDebris.h" />
+    <ClInclude Include="Source\World\Debris.h" />
     <ClInclude Include="Source\World\World.h" />
     <ClInclude Include="Source\World\WorldObject.h" />
     <ClInclude Include="Source\World\SpaceShip.h" />

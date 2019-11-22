@@ -14,7 +14,6 @@ public:
 	Vector2D Normalised() const;
 
 	float DotProd(const Vector2D& otherVec) const;
-	float Angle();
 
 	friend Vector2D operator+(const Vector2D& lhs, const Vector2D& rhs);
 	friend Vector2D operator-(const Vector2D& lhs, const Vector2D& rhs);

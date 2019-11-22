@@ -42,11 +42,6 @@ float Vector2D::DotProd(const Vector2D & otherVec) const
 	return result;
 }
 
-float Vector2D::Angle()
-{
-	return 0.0f;
-}
-
 Vector2D& Vector2D::operator+=(const Vector2D & rhs)
 {
 	X += rhs.X;

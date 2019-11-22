@@ -4,6 +4,7 @@
 class WorldObject;
 class Attractor;
 class SpaceShip;
+class Debris;
 
 class World
 {
@@ -15,10 +16,15 @@ public:
 
 	void AddAttractor(Attractor* newAttractor);
 	void AddShip(SpaceShip* newShip);
+	void AddDebris(Debris* newDebris);
+	void AddDebris(std::vector<Debris*> newDebris);
 
 protected:
 	std::vector<Attractor*> mAttractors;
 	std::vector<SpaceShip*> mShips;
+	std::vector<Debris*> mDebris;
+
+	std::vector<WorldObject*> GetAllObjectsInWorld();
 
 	// calls update on the world objects
 	void UpdateWorldObjects(const float deltaTime);

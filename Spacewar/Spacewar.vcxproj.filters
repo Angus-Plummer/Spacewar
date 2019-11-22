@@ -48,7 +48,7 @@
     <ClCompile Include="Source\World\Attractor.cpp">
       <Filter>Source Files\World</Filter>
     </ClCompile>
-    <ClCompile Include="Source\World\SpaceShipDebris.cpp">
+    <ClCompile Include="Source\World\Debris.cpp">
       <Filter>Source Files\World</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,7 +80,7 @@
     <ClInclude Include="Source\Drawable.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\World\SpaceShipDebris.h">
+    <ClInclude Include="Source\World\Debris.h">
       <Filter>Source Files\World</Filter>
     </ClInclude>
   </ItemGroup>
