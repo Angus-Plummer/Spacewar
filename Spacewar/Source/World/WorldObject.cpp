@@ -5,8 +5,11 @@ WorldObject::WorldObject()
 	: mPosition()
 	, mRotation(0.0f)
 	, mIsPhysicsEnabled(false)
+	, mIsCollisionEnabled(false)
 	, mModel(nullptr)
 	, mMass(1.0f)
+	, mCollisionRadius(0.0f)
+	, mIsAlive(true)
 {
 }
 
@@ -26,6 +29,16 @@ void WorldObject::Update(const float deltaTime)
 	// TODO : move this drawing out to another class which iterates through all Drawables and draws
 	sf::RenderWindow* gameWindow = GameInstance::GetGameWindow();
 	Draw(gameWindow);
+}
+
+void WorldObject::Kill()
+{
+	mIsAlive = false;
+}
+
+bool WorldObject::IsAlive()
+{
+	return mIsAlive;
 }
 
 void WorldObject::SetPosition(const Vector2D& newPos)
@@ -83,6 +96,31 @@ bool WorldObject::GetIsPhysicsEnabled() const
 	return mIsPhysicsEnabled;
 }
 
+void WorldObject::SetIsCollisionEnabled(bool isCollisionEnabled)
+{
+	mIsCollisionEnabled = isCollisionEnabled;
+}
+
+bool WorldObject::GetIsCollisionEnabled() const
+{
+	return mIsCollisionEnabled;
+}
+
+void WorldObject::SetCollisionRadius(float radius)
+{
+	mCollisionRadius = radius;
+}
+
+float WorldObject::GetCollisionRadius() const
+{
+	return mCollisionRadius;
+}
+
+void WorldObject::OnCollision()
+{
+
+}
+
 void WorldObject::UpdatePhysics(const float deltaTime)
 {
 	mVelocity += mPendingForce / mMass * deltaTime;
@@ -96,7 +134,7 @@ void WorldObject::Draw(sf::RenderWindow* drawWindow)
 	{
 		if (mModel)
 		{
-			drawWindow->draw(*mModel);
+			drawWindow->draw(*mModel);	
 		}
 	}
 }

@@ -3,17 +3,21 @@
 Attractor::Attractor()
 	: WorldObject()
 	, mAttractionFactor(0.0f)
-	, mDeathDistance(0.0f)
 {
+	mIsPhysicsEnabled = true;
+	mIsCollisionEnabled = true;
+	mCollisionRadius = 25.0f;
 	mMass = 10000000.0f;
 	SetupVisual();
 }
 
-Attractor::Attractor(float attractionFactor, float deathDistance)
+Attractor::Attractor(float attractionFactor)
 	: WorldObject()
 	, mAttractionFactor(attractionFactor)
-	, mDeathDistance(deathDistance)
 {
+	mIsPhysicsEnabled = true;
+	mIsCollisionEnabled = true;
+	mCollisionRadius = 25.0f;
 	mMass = 1000000.0f;
 	SetupVisual();
 }
@@ -26,16 +30,6 @@ void Attractor::SetAttractionFactor(float newAttractionFactor)
 float Attractor::GetAttractionFactor() const
 {
 	return mAttractionFactor;
-}
-
-void Attractor::SetDeathDistance(float deathDistance)
-{
-	mDeathDistance = deathDistance;
-}
-
-float Attractor::GetDeathDistance() const
-{
-	return mDeathDistance;
 }
 
 void Attractor::ApplyForce(WorldObject* otherObject)
@@ -52,6 +46,14 @@ void Attractor::ApplyForce(WorldObject* otherObject)
 	otherObject->AddForce(force);
 }
 
+void Attractor::UpdatePhysics(const float deltaTime)
+{
+	WorldObject::UpdatePhysics(deltaTime);
+	// random rotation frequency changes recreates flickering effect of star regardless of display refresh rate
+	float frequency = 2.0f + 10.0f * (rand() % 10000 / 10000.0f);
+	mRotation += deltaTime * frequency * 360.0f;
+}
+
 void Attractor::Draw(sf::RenderWindow* drawWindow)
 {
 	WorldObject::Draw(drawWindow);
@@ -60,11 +62,14 @@ void Attractor::Draw(sf::RenderWindow* drawWindow)
 
 sf::Shape* Attractor::GenerateModel() const
 {	
-	sf::CircleShape* attractorShape = new sf::CircleShape(mDeathDistance, 30);
-	// create spaceship shape and assign to drawn shape
-	attractorShape->setFillColor(sf::Color::White);
-	//attractorShape->setOutlineThickness(-1.0f); // outline from edge towards centre
-	//attractorShape->setOutlineColor(sf::Color(255, 255, 255));
-	attractorShape->setOrigin(mDeathDistance / 2.0f, mDeathDistance / 2.0f);
+	//float width = 3.0f;
+	//sf::RectangleShape* attractorShape = new sf::RectangleShape(sf::Vector2f(mCollisionRadius * 2.0f, width));
+	//attractorShape->setOrigin(mCollisionRadius, width /2.0f);
+
+	sf::CircleShape* attractorShape = new sf::CircleShape(mCollisionRadius, 30);
+	attractorShape->setOrigin(mCollisionRadius, mCollisionRadius);
+	attractorShape->setFillColor(sf::Color::Black);
+	attractorShape->setOutlineThickness(1.0f); 
+	attractorShape->setOutlineColor(sf::Color::White);
 	return attractorShape;
 }

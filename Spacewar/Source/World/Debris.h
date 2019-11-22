@@ -7,6 +7,8 @@ public:
 	Debris();
 	Debris(float size);
 
+	virtual void OnCollision() override;
+
 	// Drawable Implementation
 protected:
 	float mSize; // characteristic length scale

@@ -32,7 +32,7 @@ World::~World()
 
 void World::Update(const float deltaTime)
 {
-	ApplyPhysics(deltaTime);
+	ApplyPhysicsInteraction(deltaTime);
 	UpdateWorldObjects(deltaTime);
 }
 
@@ -59,9 +59,9 @@ void World::AddDebris(std::vector<Debris*> newDebris)
 std::vector<WorldObject*> World::GetAllObjectsInWorld()
 {
 	std::vector<WorldObject*> allObjects;
-	allObjects.insert(allObjects.end(), mAttractors.begin(), mAttractors.end());
-	allObjects.insert(allObjects.end(), mShips.begin(), mShips.end());
 	allObjects.insert(allObjects.end(), mDebris.begin(), mDebris.end());
+	allObjects.insert(allObjects.end(), mShips.begin(), mShips.end());
+	allObjects.insert(allObjects.end(), mAttractors.begin(), mAttractors.end());
 
 	return allObjects;
 }
@@ -76,47 +76,103 @@ void World::UpdateWorldObjects(const float deltaTime)
 	}
 }
 
-void World::ApplyPhysics(const float deltaTime)
+void World::ApplyCollisions()
 {
-	// for each worldObject, apply the force from each attractor
 	std::vector<WorldObject*> worldObjects = GetAllObjectsInWorld();
+	
+	// all - attractor collisions
 	for (int i = 0; i < worldObjects.size(); i++)
 	{
-		WorldObject*& worldObject = worldObjects[i];
-
-		for (int j = 0; j < mAttractors.size(); j++)
+		WorldObject* currentObject = worldObjects[i];
+		if (currentObject->GetIsCollisionEnabled())
 		{
-			Attractor* attractor = mAttractors[j];
-
-			// do not apply attractor force to itself
-			if (attractor == worldObject)
+			for (int j = 0; j < mAttractors.size(); j++)
 			{
-				continue;
+				Attractor* attractor = mAttractors[j];
+				ApplyCollision(currentObject, attractor);
 			}
+		}
+	}
 
-			// if ship is within the death distance of the attractor then destroy it
-			Vector2D deltaPos = worldObject->GetPosition() - attractor->GetPosition();
-			float separation = deltaPos.Magnitude();
-			
-			if (separation < attractor->GetDeathDistance())
-			{
-				SpaceShip* ship = dynamic_cast<SpaceShip*>(worldObject);
-				if (ship)
-				{
-					std::vector<Debris*> generatedDebris = ship->GenerateDebris(50);
-					// add debris to current pass of world objects so they will be affected by the attractors upon creation
-					worldObjects.insert(worldObjects.end(), generatedDebris.begin(), generatedDebris.end());
-					// add debris to world
-					AddDebris(generatedDebris);
-					ship->Kill();
-				}
-				break;
-			}
-			
-			attractor->ApplyForce(worldObject);
+	mDebris.erase(std::remove_if(mDebris.begin(), mDebris.end(), [](Debris* debris) {return (!debris->IsAlive()); }), mDebris.end());
+
+	// ship - ship collisions
+	for (int i = 0; i + 1 < mShips.size(); i++)
+	{
+		SpaceShip* currentShip = mShips[i];
+		for (int j = i + 1; j < mShips.size(); j++)
+		{
+			SpaceShip* otherShip = mShips[j];
+			ApplyCollision(currentShip, otherShip);
+		}
+	}
+
+	// create debris from dead ships and destroy them
+	for (int i = 0; i < mShips.size(); i++)
+	{
+		SpaceShip* ship = mShips[i];
+		if (!ship->IsAlive())
+		{
+			std::vector<Debris*> generatedDebris = ship->GenerateDebris(200);
+			AddDebris(generatedDebris);
 		}
 	}
 
 	// remove dead ships
 	mShips.erase(std::remove_if(mShips.begin(), mShips.end(), [](SpaceShip* ship) {return (!ship->IsAlive()); }), mShips.end());
+
+}
+
+void World::ApplyCollision(WorldObject* object1, WorldObject* object2)
+{
+	if (object1 == object2)
+	{
+		// ignore self
+		return;
+	}
+	if (object1->GetIsCollisionEnabled() && object2->GetIsCollisionEnabled())
+	{
+		// collision if separation is less than sum of collision radii
+		Vector2D deltaPos = object2->GetPosition() - object1->GetPosition();
+		float separation = deltaPos.Magnitude();
+		float collisionSeparation = object1->GetCollisionRadius() + object2->GetCollisionRadius();
+		if (separation < collisionSeparation)
+		{
+			// collision
+			object1->OnCollision();
+			object2->OnCollision();
+		}
+	}
+}
+
+void World::ApplyAttractors(std::vector<WorldObject*>& targetObjects)
+{
+	// apply attractor force
+	for (int i = 0; i < targetObjects.size(); i++)
+	{
+		WorldObject* targetObject = targetObjects[i];
+
+		// apply the force from each attractor
+		for (int j = 0; j < mAttractors.size(); j++)
+		{
+			Attractor* attractor = mAttractors[j];
+
+			// do not apply attractor force to itself
+			if (attractor == targetObject)
+			{
+				continue;
+			}
+
+			attractor->ApplyForce(targetObject);
+		}
+	}
+}
+
+void World::ApplyPhysicsInteraction(const float deltaTime)
+{
+	ApplyCollisions();
+	
+	// objects may have been added or removed during collision
+	std::vector<WorldObject*> worldObjects = GetAllObjectsInWorld();
+	ApplyAttractors(worldObjects);
 }

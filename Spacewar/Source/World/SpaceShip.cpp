@@ -6,25 +6,23 @@ SpaceShip::SpaceShip()
 	: WorldObject()
 	, mAmmo(0)
 	, mHealth(0.0f)
-	, mIsAlive(true)
+	, mShipWidth(20.f)
+	, mShipLength(30.0f)
 {
 	mIsPhysicsEnabled = true;
+	mIsCollisionEnabled = true;
+	mCollisionRadius = mShipWidth / 2.0f;
 	SetupVisual();
-}
-
-void SpaceShip::Kill()
-{
-	mIsAlive = false;
-}
-
-bool SpaceShip::IsAlive()
-{
-	return mIsAlive;
 }
 
 void SpaceShip::Update(const float deltaTime)
 {
 	WorldObject::Update(deltaTime);
+}
+
+void SpaceShip::OnCollision()
+{
+	Kill();
 }
 
 std::vector<Debris*> SpaceShip::GenerateDebris(int numPieces) const
@@ -35,8 +33,8 @@ std::vector<Debris*> SpaceShip::GenerateDebris(int numPieces) const
 	for (int i = 0; i < numPieces; i++)
 	{
 		float randomVariationFactor = (1.0f - (5 - rand() % 10) / 10.0f); // 0.5 - 1.5
-		float debrisArea = averageAreaOfRemainingDebris * randomVariationFactor;
-		averageAreaOfRemainingDebris += (debrisArea - averageAreaOfRemainingDebris) / (numPieces - i);
+		float debrisArea = averageAreaOfRemainingDebris *randomVariationFactor;
+		averageAreaOfRemainingDebris += (averageAreaOfRemainingDebris - debrisArea) / (numPieces - i);
 		float lengthScale = sqrt(debrisArea);
 		Debris* newDebris = new Debris(lengthScale);
 
@@ -44,11 +42,11 @@ std::vector<Debris*> SpaceShip::GenerateDebris(int numPieces) const
 		newDebris->SetMass(debrisMass);
 
 		// position
-		float distance = 4.0f;
+		float distance = rand() % (int)(mShipWidth / 2.0f);
 		double angle = 2.0 * 3.141592653589793238463 * (double)i / (double)numPieces;
 		Vector2D offsetPos = Vector2D(cos(angle), sin(angle)) * distance;
 		Vector2D debrisPos = mPosition + offsetPos;
-		float explosionForceFactor = 10.0f;
+		float explosionForceFactor = 200.0f / numPieces;
 		Vector2D force = (debrisPos - mPosition) * explosionForceFactor;
 		newDebris->AddForce(force);
 		newDebris->SetVelocity(mVelocity);
@@ -71,6 +69,19 @@ void SpaceShip::Draw(sf::RenderWindow* drawWindow)
 	WorldObject::Draw(drawWindow);
 
 	drawWindow->draw(&mTrail[0], mTrail.size(), sf::LineStrip);
+
+	bool debugDrawCollisionCircle = false;
+	if (debugDrawCollisionCircle)
+	{
+		sf::CircleShape collisionCircle(mCollisionRadius, 30);
+		collisionCircle.setOrigin(mCollisionRadius, mCollisionRadius);
+		collisionCircle.setFillColor(sf::Color::Transparent);
+		collisionCircle.setOutlineThickness(1.0f);
+		collisionCircle.setOutlineColor(sf::Color::White);
+		collisionCircle.setPosition(mModel->getPosition());
+		collisionCircle.setRotation(mModel->getRotation());
+		drawWindow->draw(collisionCircle);
+	}
 }
 
 sf::Shape* SpaceShip::GenerateModel() const
@@ -86,8 +97,8 @@ sf::Shape* SpaceShip::GenerateModel() const
 	sf::Vector2f centroid(mShipLength / 3.0f, mShipWidth / 2.0f);
 	shipModel->setOrigin(centroid);
 
-	shipModel->setFillColor(sf::Color::White);
-	shipModel->setOutlineThickness(-1.0f); // outline from edge towards centre
+	shipModel->setFillColor(sf::Color::Black);
+	shipModel->setOutlineThickness(1.0f);
 	shipModel->setOutlineColor(sf::Color(255, 255, 255));
 
 	return shipModel;
@@ -102,6 +113,7 @@ void SpaceShip::UpdateVisual()
 	{
 		mTrail.erase(mTrail.begin());
 	}
-	sf::Vertex newVertex(sf::Vector2f(mPosition.X, mPosition.Y));
+	Vector2D newTrailPos = mPosition - mVelocity.Normalised() * mShipLength / 3.0f;
+	sf::Vertex newVertex(sf::Vector2f(newTrailPos.X, newTrailPos.Y));
 	mTrail.push_back(newVertex);
 }

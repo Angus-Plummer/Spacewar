@@ -11,6 +11,9 @@ public:
 
 	virtual void Update(const float deltaTime);
 
+	virtual void Kill();
+	bool IsAlive();
+
 	void SetPosition(const Vector2D& newPos);
 	Vector2D GetPosition() const;
 
@@ -28,8 +31,19 @@ public:
 	void SetIsPhysicsEnabled(bool isEnablePhysics);
 	bool GetIsPhysicsEnabled() const;
 
+	void SetIsCollisionEnabled(bool isCollisionEnabled);
+	bool GetIsCollisionEnabled() const;
+
+	void SetCollisionRadius(float radius);
+	float GetCollisionRadius() const;
+
+	virtual void OnCollision();
+
 protected:
 	bool mIsPhysicsEnabled;
+	bool mIsCollisionEnabled;
+	bool mIsAlive;
+	float mCollisionRadius;
 	float mMass;
 	Vector2D mPosition;
 	Vector2D mVelocity;
@@ -45,6 +59,7 @@ public:
 	virtual void Draw(sf::RenderWindow* drawWindow) override;
 protected:
 	sf::Shape* mModel; // main visual components
+	sf::FloatRect mCollisionRect;
 	virtual void UpdateVisual();
 	virtual void SetupVisual();
 	virtual sf::Shape* GenerateModel() const = 0; // generate model, can include randomness

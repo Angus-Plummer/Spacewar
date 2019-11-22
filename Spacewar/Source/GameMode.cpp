@@ -43,9 +43,15 @@ void GameMode::Initialise()
 	//playerController->SetShip(playerShip);
 
 	// create the star
-	Attractor* star = new Attractor(1.0f, 15.0f);
-	star->SetPosition(Vector2D(1280.0f / 2.0f, 720.0f / 2.0f));
-	mWorld->AddAttractor(star);
+	Attractor* star1 = new Attractor(2.0f);
+	star1->SetPosition(Vector2D(1280.0f / 3.0f, 720.0f / 2.0f));
+	star1->SetVelocity(Vector2D(0.0f, -50.0f));
+	mWorld->AddAttractor(star1);
+
+	Attractor* star2 = new Attractor(2.0f);
+	star2->SetPosition(Vector2D(2.0f * 1280.0f / 3.0f, 720.0f / 2.0f));
+	star2->SetVelocity(Vector2D(0.0f, 50.0f));
+	mWorld->AddAttractor(star2);
 }
 
 void GameMode::Update(const float deltaTime)

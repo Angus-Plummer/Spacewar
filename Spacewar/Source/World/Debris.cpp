@@ -4,7 +4,9 @@ Debris::Debris()
 	: WorldObject()
 	, mSize(2.0f)
 {
+	mCollisionRadius = mSize;
 	mIsPhysicsEnabled = true;
+	mIsCollisionEnabled = true;
 	SetupVisual();
 }
 
@@ -12,8 +14,15 @@ Debris::Debris(float size)
 	: WorldObject()
 	, mSize(size)
 {
+	mCollisionRadius = mSize;
 	mIsPhysicsEnabled = true;
+	mIsCollisionEnabled = true;
 	SetupVisual();
+}
+
+void Debris::OnCollision()
+{
+	Kill();
 }
 
 sf::Shape * Debris::GenerateModel() const
@@ -22,12 +31,12 @@ sf::Shape * Debris::GenerateModel() const
 	sf::CircleShape* debrisModel = new sf::CircleShape(mSize, numSides);
 
 	// set origin 
-	sf::Vector2f centre(mSize / 2.0f, mSize / 2.0f);
+	sf::Vector2f centre(mSize, mSize);
 	debrisModel->setOrigin(centre);
 
-	debrisModel->setFillColor(sf::Color::White);
-	debrisModel->setOutlineThickness(-1.0f); // outline from edge towards centre
-	debrisModel->setOutlineColor(sf::Color(255, 255, 255));
+	debrisModel->setFillColor(sf::Color::Transparent);
+	debrisModel->setOutlineThickness(-1.0f);
+	debrisModel->setOutlineColor(sf::Color::White);//sf::Color(255, 50 + rand() % 150, 0));
 
 	return debrisModel;
 }

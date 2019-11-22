@@ -8,12 +8,11 @@ class SpaceShip : public WorldObject
 public:
 	SpaceShip();
 
-	void Kill();
-	bool IsAlive();
-
 	virtual void Update(const float deltaTime) override;
 
 	// TODO: various functions for movement + firing
+
+	virtual void OnCollision() override;
 
 	// explosion
 	std::vector<Debris*> GenerateDebris(int numPieces) const;
@@ -21,7 +20,6 @@ public:
 protected:
 	int mAmmo;
 	float mHealth;
-	bool mIsAlive;
 
 	virtual void UpdatePhysics(const float deltaTime) override;
 
@@ -29,8 +27,8 @@ protected:
 public:
 	virtual void Draw(sf::RenderWindow* drawWindow) override;
 protected:
-	float mShipWidth = 10.0f;
-	float mShipLength = 15.0f;
+	float mShipWidth;
+	float mShipLength;
 	virtual sf::Shape* GenerateModel() const override;
 	virtual void UpdateVisual() override;
 

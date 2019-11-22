@@ -28,6 +28,8 @@ protected:
 
 	// calls update on the world objects
 	void UpdateWorldObjects(const float deltaTime);
-
-	void ApplyPhysics(const float deltaTime);
+	void ApplyPhysicsInteraction(const float deltaTime);
+	void ApplyCollisions();
+	void ApplyCollision(WorldObject* object1, WorldObject* object2);
+	void ApplyAttractors(std::vector<WorldObject*>& targetObjects);
 };

@@ -5,19 +5,17 @@ class Attractor : public WorldObject
 {
 public:
 	Attractor();
-	Attractor(float attractionFactor, float deathDistance);
+	Attractor(float attractionFactor);
 
 	void SetAttractionFactor(float newAttractionFactor);
 	float GetAttractionFactor() const;
-
-	void SetDeathDistance(float deathDistance);
-	float GetDeathDistance() const;
 
 	void ApplyForce(WorldObject* otherObject);
 
 protected:
 	float mAttractionFactor;
-	float mDeathDistance;
+
+	virtual void UpdatePhysics(const float deltaTime) override;
 
 	// Drawable Implementation
 public:
