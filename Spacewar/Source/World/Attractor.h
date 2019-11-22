@@ -13,7 +13,7 @@ public:
 	void SetDeathDistance(float deathDistance);
 	float GetDeathDistance() const;
 
-	void ApplyForce(WorldObject* otherObject, const float deltaTime);
+	void ApplyForce(WorldObject* otherObject);
 
 protected:
 	float mAttractionFactor;

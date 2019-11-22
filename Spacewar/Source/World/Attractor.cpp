@@ -36,18 +36,17 @@ float Attractor::GetDeathDistance() const
 	return mDeathDistance;
 }
 
-void Attractor::ApplyForce(WorldObject* otherObject, const float deltaTime)
+void Attractor::ApplyForce(WorldObject* otherObject)
 {
 	// one way, only apply force to target
 	Vector2D deltaPos = otherObject->GetPosition() - mPosition;
 	Vector2D curVel = otherObject->GetVelocity();
 	float distance = deltaPos.Magnitude();
 
-	float accelerationMag = -(mAttractionFactor / (distance * distance));
-	Vector2D acceleration = deltaPos.Normalised() * accelerationMag;
+	float forceMag = -(mAttractionFactor / (distance * distance)); // assuming mass of 1
+	Vector2D force = deltaPos.Normalised() * forceMag;
 
-	Vector2D newVel = curVel + (acceleration * deltaTime);
-	otherObject->SetVelocity(newVel);
+	otherObject->AddForce(force);
 }
 
 void Attractor::SetupShape()

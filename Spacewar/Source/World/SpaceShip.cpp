@@ -1,12 +1,24 @@
 #include "SpaceShip.h"
 
-SpaceShip::SpaceShip() 
+SpaceShip::SpaceShip()
 	: WorldObject()
 	, mAmmo(0)
 	, mHealth(0.0f)
+	, mIsAlive(true)
 {
 	mIsPhysicsEnabled = true;
 	SetupShape();
+}
+
+void SpaceShip::Kill()
+{
+	mIsAlive = false;
+	// explosion
+}
+
+bool SpaceShip::IsAlive()
+{
+	return mIsAlive;
 }
 
 void SpaceShip::SetupShape()

@@ -86,16 +86,15 @@ void World::ApplyPhysics(const float deltaTime)
 			float separation = deltaPos.Magnitude();
 			if (separation < attractor->GetDeathDistance())
 			{
-				delete ship;
-				ship = nullptr;
+				ship->Kill();
 				break;
 			}
 
-			attractor->ApplyForce(ship, deltaTime);
+			attractor->ApplyForce(ship);
 		}
 	}
-	// remove ships made nullptr from death
-	mShips.erase(std::remove_if(mShips.begin(), mShips.end(), [](SpaceShip* ship) {return (ship == nullptr); }), mShips.end());
+	// remove dead ships
+	mShips.erase(std::remove_if(mShips.begin(), mShips.end(), [](SpaceShip* ship) {return (!ship->IsAlive()); }), mShips.end());
 }
 
 std::vector<const WorldObject*> World::GetWorldObjects() const

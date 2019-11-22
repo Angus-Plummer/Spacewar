@@ -11,12 +11,11 @@ public:
 	~GameInstance();
 	void Initialise();
 	void Update(const float deltaTime);
-
-	void DrawGameObjects();
+	static sf::RenderWindow* GetGameWindow();
 
 	bool GetIsRunning() const;
 private:
 	bool mIsRunning;
-	sf::RenderWindow* mGameWindow;
-	GameMode* mGameState;
+	static sf::RenderWindow* kGameWindow;
+	GameMode* mGameMode;
 };

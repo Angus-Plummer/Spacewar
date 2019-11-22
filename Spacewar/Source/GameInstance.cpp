@@ -3,16 +3,17 @@
 #include "World/World.h"
 #include "World/WorldObject.h"
 
+sf::RenderWindow* GameInstance::kGameWindow = nullptr;
+
 GameInstance::GameInstance()
 	: mIsRunning(false)
-	, mGameWindow(nullptr)
 {
 }
 
 GameInstance::~GameInstance()
 {
-	delete mGameWindow;
-	delete mGameState;
+	delete kGameWindow;
+	delete mGameMode;
 }
 
 void GameInstance::Initialise()
@@ -22,50 +23,39 @@ void GameInstance::Initialise()
 	// Initialise Game Window
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 8;
-	mGameWindow = new sf::RenderWindow(sf::VideoMode(1280, 720), "Spacewar!", sf::Style::Default, settings);
-	mGameWindow->setFramerateLimit(60);
+	kGameWindow = new sf::RenderWindow(sf::VideoMode(1280, 720), "Spacewar!", sf::Style::Default, settings);
+	kGameWindow->setFramerateLimit(60);
 
 	// Initialise Game Mode
-	mGameState = new GameMode();
-	mGameState->Initialise();
+	mGameMode = new GameMode();
+	mGameMode->Initialise();
 }
 
 void GameInstance::Update(const float deltaTime)
 {
 	sf::Event event;
-	while (mGameWindow->pollEvent(event))
+	while (kGameWindow->pollEvent(event))
 	{
 		// poll for window closed event
 		if (event.type == sf::Event::Closed)
 		{
-			mGameWindow->close();
+			kGameWindow->close();
 			mIsRunning = false;
 		}
 	}
 	if (mIsRunning)
 	{
-		mGameWindow->clear();
+		kGameWindow->clear();
 
-		mGameState->Update(deltaTime);
-		DrawGameObjects(); // TODO: move this to separate world observer class
+		mGameMode->Update(deltaTime);
 
-		mGameWindow->display();
+		kGameWindow->display();
 	}
 }
 
-void GameInstance::DrawGameObjects()
+sf::RenderWindow * GameInstance::GetGameWindow()
 {
-	World* gameWorld = mGameState->GetWorld();
-	std::vector<const WorldObject*> gameObjects = gameWorld->GetWorldObjects();
-	for (int i = 0; i < gameObjects.size(); i++)
-	{
-		const WorldObject* currentGameObject = gameObjects[i];
-		const sf::Shape* objectShape = currentGameObject->GetShape();
-		if (objectShape)
-		{
-			mGameWindow->draw(*objectShape);
-		}
-	}
+	return kGameWindow;
 }
 
 bool GameInstance::GetIsRunning() const

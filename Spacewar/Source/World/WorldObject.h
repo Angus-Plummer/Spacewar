@@ -17,6 +17,8 @@ public:
 	void SetVelocity(const Vector2D& newVel);
 	Vector2D GetVelocity() const;
 
+	void AddForce(const Vector2D& force);
+
 	void SetRotation(float newRot);
 	float GetRotation() const;
 
@@ -24,11 +26,13 @@ public:
 	bool GetIsPhysicsEnabled() const;
 
 	const sf::Shape* GetShape() const;
+	void Draw();
 
 protected:
 	bool mIsPhysicsEnabled;
 	Vector2D mPosition;
 	Vector2D mVelocity;
+	Vector2D mPendingForce;
 
 	float mRotation;
 	// float mAngularVelocity;
