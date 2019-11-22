@@ -72,7 +72,7 @@ void World::ApplyPhysics(const float deltaTime)
 			// if ship is within the death distance of the attractor then destroy it
 			Vector2D deltaPos = ship->GetPosition() - attractor->GetPosition();
 			float separation = deltaPos.Magnitude();
-			if (separation < attractor->GetDeathDistance())
+			if (separation < attractor->GetDeathDistance() * 1.2f)
 			{
 				ship->Kill();
 				break;

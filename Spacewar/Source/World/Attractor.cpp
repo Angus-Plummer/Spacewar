@@ -63,8 +63,8 @@ sf::Shape* Attractor::GenerateModel() const
 	sf::CircleShape* attractorShape = new sf::CircleShape(mDeathDistance, 30);
 	// create spaceship shape and assign to drawn shape
 	attractorShape->setFillColor(sf::Color::White);
-	attractorShape->setOutlineThickness(-1.0f); // outline from edge towards centre
-	attractorShape->setOutlineColor(sf::Color(255, 255, 255));
+	//attractorShape->setOutlineThickness(-1.0f); // outline from edge towards centre
+	//attractorShape->setOutlineColor(sf::Color(255, 255, 255));
 	attractorShape->setOrigin(mDeathDistance / 2.0f, mDeathDistance / 2.0f);
 	return attractorShape;
 }

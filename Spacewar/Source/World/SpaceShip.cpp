@@ -49,7 +49,7 @@ sf::ConvexShape* SpaceShip::GenerateModel() const
 	sf::Vector2f centroid(length / 3.0f, width / 2.0f);
 	shipModel->setOrigin(centroid);
 
-	shipModel->setFillColor(sf::Color::Black);
+	shipModel->setFillColor(sf::Color::White);
 	shipModel->setOutlineThickness(-1.0f); // outline from edge towards centre
 	shipModel->setOutlineColor(sf::Color(255, 255, 255));
 
