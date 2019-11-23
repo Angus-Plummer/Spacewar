@@ -12,23 +12,15 @@ World::World()
 
 World::~World()
 {
-	for (int i = 0; i < mAttractors.size(); i++)
+	std::vector<WorldObject*> worldObjects = GetAllObjectsInWorld();
+	for (int i = 0; i < worldObjects.size(); i++)
 	{
-		delete mAttractors[i];
+		delete worldObjects[i];
 	}
 	mAttractors.clear();
-
-	for (int i = 0; i < mShips.size(); i++)
-	{
-		delete mShips[i];
-	}
 	mShips.clear();
-
-	for (int i = 0; i < mDebris.size(); i++)
-	{
-		delete mDebris[i];
-	}
 	mDebris.clear();
+	mBullets.clear();
 }
 
 void World::Update(const float deltaTime)
@@ -134,10 +126,11 @@ void World::RemoveDebris(Debris * debris)
 
 std::vector<WorldObject*> World::GetAllObjectsInWorld()
 {
+	// order here determines draw order and order of physics calculations etc
 	std::vector<WorldObject*> allObjects;
 	allObjects.insert(allObjects.end(), mDebris.begin(), mDebris.end());
-	allObjects.insert(allObjects.end(), mShips.begin(), mShips.end());
 	allObjects.insert(allObjects.end(), mBullets.begin(), mBullets.end());
+	allObjects.insert(allObjects.end(), mShips.begin(), mShips.end());
 	allObjects.insert(allObjects.end(), mAttractors.begin(), mAttractors.end());
 
 	return allObjects;
