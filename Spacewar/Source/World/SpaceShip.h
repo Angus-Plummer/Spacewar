@@ -10,9 +10,8 @@ public:
 
 	virtual void Update(const float deltaTime) override;
 
-	// TODO: various functions for movement + firing
-
 	void FireBullet();
+	void FireThrusters(const float deltaTime);
 	void EnableThrusters();
 	void DisableThrusters();
 

@@ -41,6 +41,20 @@ void SpaceShip::FireBullet()
 	}
 }
 
+void SpaceShip::FireThrusters(const float deltaTime)
+{
+	float thrusterImpulse = 50.0f;
+	float fuelUsageRate = 1.0f;
+	Vector2D thrusterForce = ForwardVector() * thrusterImpulse;
+	AddForce(thrusterForce);
+	mFuel -= fuelUsageRate * deltaTime;
+	if (mFuel < 0.0f)
+	{
+		mFuel = 0.0f;
+		DisableThrusters();
+	}
+}
+
 void SpaceShip::EnableThrusters()
 {
 	if (mFuel > 0)
@@ -110,16 +124,7 @@ void SpaceShip::UpdatePhysics(const float deltaTime)
 {
 	if (mIsThrustersEnabled)
 	{
-		float thrusterImpulse = 50.0f;
-		float fuelUsageRate = 1.0f;
-		Vector2D thrusterForce = ForwardVector() * thrusterImpulse;
-		AddForce(thrusterForce);
-		mFuel -= fuelUsageRate * deltaTime;
-		if (mFuel < 0.0f)
-		{
-			mFuel = 0.0f;
-			DisableThrusters();
-		}
+		FireThrusters(deltaTime);
 	}
 
 	WorldObject::UpdatePhysics(deltaTime);
