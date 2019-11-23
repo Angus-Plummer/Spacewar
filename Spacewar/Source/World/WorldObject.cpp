@@ -1,5 +1,6 @@
 #include "WorldObject.h"
 #include "../GameInstance.h"
+#include "World.h"
 
 WorldObject::WorldObject()
 	: mPosition()
@@ -13,6 +14,7 @@ WorldObject::WorldObject()
 	, mMass(1.0f)
 	, mCollisionRadius(0.0f)
 	, mIsAlive(true)
+	, mIsWrapAround(true)
 {
 }
 
@@ -29,9 +31,10 @@ void WorldObject::Update(const float deltaTime)
 	}
 	UpdateVisual();
 
-	// TODO : move this drawing out to another class which iterates through all Drawables and draws
-	sf::RenderWindow* gameWindow = GameInstance::GetGameWindow();
-	Draw(gameWindow);
+	if (!mWorld->IsWithinBounds(mPosition))
+	{
+		OnLeaveWorldBounds();
+	}
 }
 
 void WorldObject::SetWorld(World * world)
@@ -144,6 +147,14 @@ void WorldObject::OnCollision(WorldObject* collidingObject)
 
 }
 
+void WorldObject::OnLeaveWorldBounds()
+{
+	if (mIsWrapAround)
+	{
+		mPosition = mWorld->WrapAround(mPosition);
+	}
+}
+
 void WorldObject::UpdatePhysics(const float deltaTime)
 {
 	mVelocity += mPendingForce / mMass * deltaTime;
@@ -156,12 +167,9 @@ void WorldObject::UpdatePhysics(const float deltaTime)
 
 void WorldObject::Draw(sf::RenderWindow* drawWindow)
 {
-	if (drawWindow)
+	if (mModel)
 	{
-		if (mModel)
-		{
-			drawWindow->draw(*mModel);	
-		}
+		drawWindow->draw(*mModel);	
 	}
 }
 
@@ -170,7 +178,8 @@ void WorldObject::UpdateVisual()
 	// set the underlying drawn shape's properties to those of the game object
 	if (mModel)
 	{
-		mModel->setPosition(mPosition.X, mPosition.Y);
+		Vector2D screenPosition = mWorld->WorldToScreenPos(mPosition);
+		mModel->setPosition(screenPosition.X, screenPosition.Y);
 		mModel->setRotation(mRotation);
 	}
 }

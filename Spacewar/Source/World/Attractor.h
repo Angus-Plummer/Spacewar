@@ -24,5 +24,4 @@ public:
 	virtual void Draw(sf::RenderWindow* drawWindow) override;
 protected:
 	virtual sf::Shape* GenerateModel() const override;
-
 };

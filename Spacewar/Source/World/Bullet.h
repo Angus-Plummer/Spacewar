@@ -11,6 +11,8 @@ protected:
 
 	virtual void UpdatePhysics(const float deltaTime) override;
 
+	virtual void OnLeaveWorldBounds();
+
 	// Drawable Implementation
 public:
 	virtual void Draw(sf::RenderWindow* drawWindow) override;
@@ -20,5 +22,5 @@ protected:
 
 	// movement trail
 	int mMaxNumTrailVertices = 30;
-	std::vector<sf::Vertex> mTrail;
+	std::vector<std::vector<sf::Vertex>> mTrail; // vector of vectors as they can be discontinuous due to wrapping
 };

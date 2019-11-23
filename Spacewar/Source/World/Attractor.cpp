@@ -67,14 +67,10 @@ void Attractor::Draw(sf::RenderWindow* drawWindow)
 
 sf::Shape* Attractor::GenerateModel() const
 {	
-	//float width = 3.0f;
-	//sf::RectangleShape* attractorShape = new sf::RectangleShape(sf::Vector2f(mCollisionRadius * 2.0f, width));
-	//attractorShape->setOrigin(mCollisionRadius, width /2.0f);
-
 	sf::CircleShape* attractorShape = new sf::CircleShape(mCollisionRadius, 30);
 	attractorShape->setOrigin(mCollisionRadius, mCollisionRadius);
 	attractorShape->setFillColor(sf::Color::Black);
-	attractorShape->setOutlineThickness(1.0f); 
+	attractorShape->setOutlineThickness(-1.5f); 
 	attractorShape->setOutlineColor(sf::Color::White);
 	return attractorShape;
 }

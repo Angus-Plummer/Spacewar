@@ -7,6 +7,7 @@ Debris::Debris()
 	mCollisionRadius = mSize;
 	mIsPhysicsEnabled = true;
 	mIsCollisionEnabled = true;
+	mIsWrapAround = false;
 	SetupVisual();
 }
 
@@ -17,6 +18,7 @@ Debris::Debris(float size)
 	mCollisionRadius = mSize;
 	mIsPhysicsEnabled = true;
 	mIsCollisionEnabled = true;
+	mIsWrapAround = false;
 	SetupVisual();
 }
 

@@ -58,9 +58,12 @@ protected:
 	Vector2D mPosition;
 	Vector2D mVelocity;
 	Vector2D mPendingForce;
+	bool mIsWrapAround;
 
 	float mRotation;
 	float mAngularVelocity;
+
+	virtual void OnLeaveWorldBounds();
 
 	virtual void UpdatePhysics(const float deltaTime);
 

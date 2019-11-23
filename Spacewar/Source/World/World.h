@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include "../Math/Vector2D.h"
+#include "../Drawable.h"
 
 class WorldObject;
 class Attractor;
@@ -7,13 +9,27 @@ class SpaceShip;
 class Bullet;
 class Debris;
 
-class World
+class World : public Drawable
 {
 public:
 	World();
 	~World();
 
 	void Update(const float deltaTime);
+
+	Vector2D GetLowerBound() const;
+	Vector2D GetUpperBound() const;
+	void SetBounds(std::pair<Vector2D, Vector2D> bounds);
+	void SetBounds(Vector2D lowerBound, Vector2D upperBound);
+
+	Vector2D GetOrigin() const;
+	void SetOrigin(Vector2D origin);
+
+	Vector2D WorldToScreenPos(Vector2D worldPosition);
+	Vector2D ScreenToWorldPos(Vector2D screenPosition);
+
+	Vector2D WrapAround(Vector2D position);
+	bool IsWithinBounds(Vector2D position);
 
 	void AddAttractor(Attractor* newAttractor);
 	void AddShip(SpaceShip* newShip);
@@ -23,6 +39,9 @@ public:
 	void RemoveWorldObject(WorldObject* worldObject);
 
 protected:
+	std::pair<Vector2D, Vector2D> mBounds;
+	Vector2D mOrigin;
+
 	std::vector<Attractor*> mAttractors;
 	std::vector<SpaceShip*> mShips;
 	std::vector<Bullet*> mBullets;
@@ -41,4 +60,9 @@ protected:
 	void ApplyCollisions();
 	void ApplyCollision(WorldObject* object1, WorldObject* object2);
 	void ApplyAttractors(std::vector<WorldObject*>& targetObjects);
+
+	// Drawable Implementation.
+protected:
+	virtual void Draw(sf::RenderWindow* drawWindow) override;
+	sf::RectangleShape mBoxBounds;
 };

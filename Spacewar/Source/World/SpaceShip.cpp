@@ -114,8 +114,8 @@ void SpaceShip::GenerateDebris(int numPieces) const
 		newDebris->SetMass(debrisMass);
 
 		// equally spread around centre at random distance
-		float distance = rand() % (int)(mShipWidth / 2.0f);
-		double angle = 2.0 * PI * (double)i / (double)numPieces;
+		float distance = (float) (rand() % (int)(mShipWidth / 2.0f));
+		float angle = 2.0 * PI * (float)i / (float)numPieces;
 		Vector2D offsetPos = Vector2D(cos(angle), sin(angle)) * distance;
 		Vector2D debrisPos = mPosition + offsetPos;
 		newDebris->SetPosition(debrisPos);
@@ -210,7 +210,9 @@ void SpaceShip::UpdateVisual()
 		for (int i = 0; i < mThrustersModel.size(); i++)
 		{
 			sf::Shape* thrusterComponent = mThrustersModel[i];
-			thrusterComponent->setPosition(mPosition.X, mPosition.Y);
+			Vector2D worldOrigin = mWorld->GetOrigin();
+			Vector2D screenPosition = worldOrigin + mPosition;
+			thrusterComponent->setPosition(screenPosition.X, screenPosition.Y);
 			thrusterComponent->setRotation(mRotation);
 		}
 	}

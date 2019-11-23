@@ -1,4 +1,5 @@
 #include "World.h"
+#include "../GameInstance.h"
 #include "WorldObject.h"
 #include "Attractor.h"
 #include "SpaceShip.h"
@@ -7,7 +8,13 @@
 #include <algorithm>
 
 World::World()
+	: mOrigin(0.0f, 0.0f)
+	, mBounds(Vector2D(0.0f, 0.0f), Vector2D(1280.0f, 720.0f))
 {
+	mBoxBounds.setSize(sf::Vector2f(mBounds.second.X - mBounds.first.X, mBounds.second.Y - mBounds.first.Y));
+	Vector2D lowerScreenBound = WorldToScreenPos(mBounds.first);
+	mBoxBounds.setPosition(lowerScreenBound.X, lowerScreenBound.Y);
+	mBoxBounds.setFillColor(sf::Color::Transparent);
 }
 
 World::~World()
@@ -27,6 +34,56 @@ void World::Update(const float deltaTime)
 {
 	ApplyPhysicsInteraction(deltaTime);
 	UpdateWorldObjects(deltaTime);
+
+	sf::RenderWindow* gameWindow = GameInstance::GetGameWindow();
+	Draw(gameWindow);
+}
+
+Vector2D World::GetLowerBound() const
+{
+	return mBounds.first;
+}
+
+Vector2D World::GetUpperBound() const
+{
+	return mBounds.second;
+}
+
+void World::SetBounds(std::pair<Vector2D, Vector2D> bounds)
+{
+	mBounds = bounds;
+	mBoxBounds.setSize(sf::Vector2f(mBounds.second.X - mBounds.first.X, mBounds.second.Y - mBounds.first.Y));
+	Vector2D lowerScreenBound = WorldToScreenPos(mBounds.first);
+	mBoxBounds.setPosition(lowerScreenBound.X, lowerScreenBound.Y);
+}
+
+void World::SetBounds(Vector2D lowerBound, Vector2D upperBound)
+{
+	SetBounds(std::pair<Vector2D, Vector2D>(lowerBound, upperBound));
+}
+
+Vector2D World::GetOrigin() const
+{
+	return mOrigin;
+}
+
+void World::SetOrigin(Vector2D origin)
+{
+	mOrigin = origin;
+}
+
+Vector2D World::WorldToScreenPos(Vector2D worldPosition)
+{
+	float scale = 1.0f;
+	Vector2D screenPos = (worldPosition / scale) + mOrigin;
+	return screenPos;
+}
+
+Vector2D World::ScreenToWorldPos(Vector2D screenPosition)
+{
+	float scale = 1.0f;
+	Vector2D worldPos = (screenPosition - mOrigin) * scale;
+	return worldPos;
 }
 
 void World::AddAttractor(Attractor* newAttractor)
@@ -232,6 +289,55 @@ void World::ApplyAttractors(std::vector<WorldObject*>& targetObjects)
 			attractor->ApplyForce(targetObject);
 		}
 	}
+}
+
+void World::Draw(sf::RenderWindow* drawWindow)
+{
+	// draw all objects in the world
+	std::vector<WorldObject*> worldObjects = GetAllObjectsInWorld();
+	for (int i = 0; i < worldObjects.size(); i++)
+	{
+		WorldObject* worldObject = worldObjects[i];
+		worldObject->Draw(drawWindow);
+	}
+
+	// draw the world bounds
+
+	// draw thick outline box to cover up any world objects clipping over the edge of the world bounds
+	mBoxBounds.setOutlineColor(sf::Color::Black);
+	mBoxBounds.setOutlineThickness(500.0f);
+	drawWindow->draw(mBoxBounds);
+
+	// draw thin outline to show world edge
+	mBoxBounds.setOutlineColor(sf::Color::White);
+	mBoxBounds.setOutlineThickness(2.0f);
+	drawWindow->draw(mBoxBounds);
+}
+
+Vector2D World::WrapAround(Vector2D position)
+{
+	Vector2D newPos(position);
+	Vector2D lowerBound = mBounds.first;
+	Vector2D upperBound = mBounds.second;
+	if (upperBound.X == lowerBound.X || upperBound.Y == lowerBound.Y)
+	{
+		// avoid div by zero error
+		return newPos;
+	}
+	auto ArithmeticModulus = [](float val, float range) {return val - range * floor(val / range); };
+
+	float xmod = ArithmeticModulus(position.X - lowerBound.X, upperBound.X - lowerBound.X);
+	float ymod = ArithmeticModulus(position.Y - lowerBound.Y, upperBound.Y - lowerBound.Y);
+	newPos.X = lowerBound.X + xmod;
+	newPos.Y = lowerBound.Y + ymod;
+
+	return newPos;
+}
+
+bool World::IsWithinBounds(Vector2D position)
+{
+	return !(position.X < mBounds.first.X || position.X > mBounds.second.X
+		|| position.Y < mBounds.first.Y || position.Y > mBounds.second.Y);
 }
 
 void World::ApplyPhysicsInteraction(const float deltaTime)
