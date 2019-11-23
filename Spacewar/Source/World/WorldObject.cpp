@@ -3,7 +3,9 @@
 
 WorldObject::WorldObject()
 	: mPosition()
+	, mVelocity()
 	, mRotation(0.0f)
+	, mAngularVelocity(0.0f)
 	, mWorld(nullptr)
 	, mIsPhysicsEnabled(false)
 	, mIsCollisionEnabled(false)
@@ -97,6 +99,16 @@ float WorldObject::GetRotation() const
 	return mRotation;
 }
 
+void WorldObject::SetAngularVelocity(float newAngularVel)
+{
+	mAngularVelocity = newAngularVel;
+}
+
+float WorldObject::GetAngularVelocity() const
+{
+	return mAngularVelocity;
+}
+
 void WorldObject::SetIsPhysicsEnabled(bool isEnablePhysics)
 {
 	mIsPhysicsEnabled = isEnablePhysics;
@@ -137,6 +149,9 @@ void WorldObject::UpdatePhysics(const float deltaTime)
 	mVelocity += mPendingForce / mMass * deltaTime;
 	mPendingForce = Vector2D();
 	mPosition += mVelocity * deltaTime;
+
+	mRotation += mAngularVelocity * deltaTime;
+	mRotation = fmodf(mRotation, 360.0f);
 }
 
 void WorldObject::Draw(sf::RenderWindow* drawWindow)

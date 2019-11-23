@@ -34,6 +34,9 @@ public:
 	void SetRotation(float newRot);
 	float GetRotation() const;
 
+	void SetAngularVelocity(float newAngularVel);
+	float GetAngularVelocity() const;
+
 	void SetIsPhysicsEnabled(bool isEnablePhysics);
 	bool GetIsPhysicsEnabled() const;
 
@@ -57,7 +60,7 @@ protected:
 	Vector2D mPendingForce;
 
 	float mRotation;
-	// float mAngularVelocity;
+	float mAngularVelocity;
 
 	virtual void UpdatePhysics(const float deltaTime);
 

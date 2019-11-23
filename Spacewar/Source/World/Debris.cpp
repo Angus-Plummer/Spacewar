@@ -25,6 +25,12 @@ void Debris::OnCollision(WorldObject* collidingObject)
 	Kill(); // kill self
 }
 
+void Debris::UpdatePhysics(const float deltaTime)
+{
+	WorldObject::UpdatePhysics(deltaTime);
+
+}
+
 sf::Shape * Debris::GenerateModel() const
 {
 	int numSides = 3 + rand() % 3;

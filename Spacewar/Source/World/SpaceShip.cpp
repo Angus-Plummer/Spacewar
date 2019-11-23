@@ -96,6 +96,9 @@ void SpaceShip::GenerateDebris(int numPieces) const
 		Vector2D force = (debrisPos - mPosition) * explosionForceFactor;
 		newDebris->AddForce(force);
 
+		float randomAngularVel = (-360.0f + rand() % 720) * 3.0f; // max 3 rotation per second
+		newDebris->SetAngularVelocity(randomAngularVel);
+
 		generatedDebris.push_back(newDebris);
 	}
 
