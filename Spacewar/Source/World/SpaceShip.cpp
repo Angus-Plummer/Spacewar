@@ -24,7 +24,7 @@ void SpaceShip::Update(const float deltaTime)
 void SpaceShip::OnCollision()
 {
 	Kill();
-	int numPieces = 64 + rand() % 128;
+	int numPieces = 64 + rand() % 64;
 	GenerateDebris(numPieces);
 }
 
@@ -32,18 +32,12 @@ void SpaceShip::GenerateDebris(int numPieces) const
 {
 	std::vector<Debris*> generatedDebris;
 	const float shipArea = mShipWidth * mShipLength / 2.0f;
-	float remainingShipArea = shipArea;
-	std::vector<float> debrisAreas;
 	for (int i = 0; i < numPieces; i++)
 	{
 		// determine length scale of this debris
-		float randomVariationFactor = 0.1f + ((rand() % 18) / 10.0f); // 0.1 - 1.9
-		int remainingPieces = numPieces - i;
-		//float debrisArea = remainingShipArea / (float)remainingPieces * randomVariationFactor;
+		float randomVariationFactor = 0.25f + ((rand() % 15) / 10.0f); // 0.25 - 1.75
 		float debrisArea = shipArea / numPieces * randomVariationFactor;
-		debrisAreas.push_back(debrisArea);
-		remainingShipArea -= debrisArea;
-		float lengthScale = sqrt(debrisArea) * 1.5f;
+		float lengthScale = sqrt(debrisArea);
 		Debris* newDebris = new Debris(lengthScale);
 
 		float debrisMass = mMass * debrisArea / shipArea;
