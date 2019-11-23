@@ -2,17 +2,26 @@
 #include "GameMode.h"
 #include "World/World.h"
 #include "World/WorldObject.h"
+#include <SFML/Window.hpp>
+#include "Input/InputManager.h"
 
 sf::RenderWindow* GameInstance::kGameWindow = nullptr;
+InputManager* GameInstance::kInputManager = nullptr;
 
 GameInstance::GameInstance()
 	: mIsRunning(false)
+	, mWindowHasFocus(true)
 {
 }
 
 GameInstance::~GameInstance()
 {
 	delete kGameWindow;
+	kGameWindow = nullptr;
+
+	delete kInputManager;
+	kInputManager = nullptr;
+
 	delete mGameMode;
 }
 
@@ -25,6 +34,9 @@ void GameInstance::Initialise()
 	settings.antialiasingLevel = 8;
 	kGameWindow = new sf::RenderWindow(sf::VideoMode(1280, 720), "Spacewar!", sf::Style::Default, settings);
 	kGameWindow->setFramerateLimit(60);
+
+	// Initialise Input Manager
+	kInputManager = new InputManager();
 
 	// Initialise Game Mode
 	mGameMode = new GameMode();
@@ -42,8 +54,21 @@ void GameInstance::Update(const float deltaTime)
 			kGameWindow->close();
 			mIsRunning = false;
 		}
+		else if (event.type == sf::Event::LostFocus)
+		{
+			mWindowHasFocus = false;
+		}
+		else if (event.type == sf::Event::GainedFocus)
+		{
+			mWindowHasFocus = true;
+		}
+		else if (event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased)
+		{
+			kInputManager->ProcessInput(event.key.code, event.type);
+		}
 	}
-	if (mIsRunning)
+
+	if (mIsRunning && mWindowHasFocus)
 	{
 		kGameWindow->clear();
 
@@ -51,6 +76,11 @@ void GameInstance::Update(const float deltaTime)
 
 		kGameWindow->display();
 	}
+}
+
+InputManager * GameInstance::GetInputManager()
+{
+	return kInputManager;
 }
 
 sf::RenderWindow * GameInstance::GetGameWindow()

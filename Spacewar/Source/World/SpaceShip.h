@@ -3,6 +3,12 @@
 
 class Debris;
 
+enum TurningDirection
+{
+	Clockwise,
+	AntiClockwise
+};
+
 class SpaceShip : public WorldObject
 {
 public:
@@ -11,9 +17,11 @@ public:
 	virtual void Update(const float deltaTime) override;
 
 	void FireBullet();
-	void FireThrusters(const float deltaTime);
 	void EnableThrusters();
 	void DisableThrusters();
+
+	void StartManualRotation(TurningDirection direction);
+	void StopManualRotation(TurningDirection direction);
 
 	virtual void OnCollision(WorldObject* collidingObject) override;
 
@@ -27,6 +35,10 @@ protected:
 	float mFuel;
 	int mAmmo;
 	float mHealth;
+	float mManualRotationRate;
+	float mThrusterImpulse;
+
+	void FireThrusters(const float deltaTime);
 
 	virtual void UpdatePhysics(const float deltaTime) override;
 

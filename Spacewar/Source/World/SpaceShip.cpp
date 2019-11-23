@@ -8,9 +8,12 @@ SpaceShip::SpaceShip()
 	: WorldObject()
 	, mAmmo(10)
 	, mHealth(0.0f)
+	, mFuel(100.0f)
 	, mShipWidth(20.f)
 	, mShipLength(30.0f)
 	, mIsThrustersEnabled(false)
+	, mThrusterImpulse(100.0f)
+	, mManualRotationRate(180.0f)
 {
 	mIsPhysicsEnabled = true;
 	mIsCollisionEnabled = true;
@@ -33,8 +36,9 @@ void SpaceShip::FireBullet()
 		Bullet* bullet = new Bullet();
 		Vector2D firingPos = mPosition + ForwardVector() * mShipLength;
 		bullet->SetPosition(firingPos);
-		float bulletSpeed = 200.0f;
+		float bulletSpeed = 150.0f;
 		Vector2D bulletVelocity = (firingPos - mPosition).Normalised() * bulletSpeed;
+		bulletVelocity += ForwardVector() * std::max(0.0f, ForwardVector().DotProd(mVelocity));
 		bullet->SetVelocity(bulletVelocity);
 
 		mWorld->AddBullet(bullet);
@@ -43,9 +47,8 @@ void SpaceShip::FireBullet()
 
 void SpaceShip::FireThrusters(const float deltaTime)
 {
-	float thrusterImpulse = 50.0f;
 	float fuelUsageRate = 1.0f;
-	Vector2D thrusterForce = ForwardVector() * thrusterImpulse;
+	Vector2D thrusterForce = ForwardVector() * mThrusterImpulse;
 	AddForce(thrusterForce);
 	mFuel -= fuelUsageRate * deltaTime;
 	if (mFuel < 0.0f)
@@ -68,6 +71,21 @@ void SpaceShip::DisableThrusters()
 	mIsThrustersEnabled = false;
 }
 
+void SpaceShip::StartManualRotation(TurningDirection direction)
+{
+	float angularVelocity = mManualRotationRate * (direction == Clockwise ? 1.0f : -1.0f);
+	SetAngularVelocity(angularVelocity);
+}
+
+void SpaceShip::StopManualRotation(TurningDirection direction)
+{
+	// if angular velocity is in same direction then stop it
+	if (mAngularVelocity * (direction == Clockwise ? 1.0f : -1.0f) > 0.0f)
+	{
+		SetAngularVelocity(0.0f);
+	}
+}
+
 void SpaceShip::OnCollision(WorldObject* collidingObject)
 {
 	Kill();
@@ -78,7 +96,6 @@ void SpaceShip::Kill()
 	WorldObject::Kill();
 	int numPieces = 64 + rand() % 64;
 	GenerateDebris(numPieces);
-	FireBullet();
 }
 
 void SpaceShip::GenerateDebris(int numPieces) const
@@ -129,15 +146,16 @@ void SpaceShip::UpdatePhysics(const float deltaTime)
 
 	WorldObject::UpdatePhysics(deltaTime);
 
-	double radians = atan2(mVelocity.Y, mVelocity.X);
-	double degrees = radians * (180.0 / PI);
-	mRotation = (float)degrees;
+	//double radians = atan2(mVelocity.Y, mVelocity.X);
+	//double degrees = radians * (180.0 / PI);
+	//mRotation = (float)degrees;
 }
 
 void SpaceShip::Draw(sf::RenderWindow* drawWindow)
 {
+	//drawWindow->draw(&mTrail[0], mTrail.size(), sf::LineStrip);
+
 	WorldObject::Draw(drawWindow);
-	drawWindow->draw(&mTrail[0], mTrail.size(), sf::LineStrip);
 
 	if (mIsThrustersEnabled)
 	{
@@ -197,14 +215,15 @@ void SpaceShip::UpdateVisual()
 		}
 	}
 
-	// destroy first element in trail and add current position to the end
+	/*// destroy first element in trail and add current position to the end
 	if (mTrail.size() >= mMaxNumTrailVertices)
 	{
 		mTrail.erase(mTrail.begin());
 	}
-	Vector2D newTrailPos = mPosition - mVelocity.Normalised() * mShipLength / 3.0f;
+	Vector2D newTrailPos = mPosition;// -mVelocity.Normalised() * mShipLength / 3.0f;
 	sf::Vertex newVertex(sf::Vector2f(newTrailPos.X, newTrailPos.Y));
 	mTrail.push_back(newVertex);
+	*/
 }
 
 std::vector<sf::Shape*> SpaceShip::GenerateThrustersModel()

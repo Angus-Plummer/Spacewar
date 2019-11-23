@@ -16,6 +16,8 @@ public:
 
 	World* GetWorld() const;
 
+	std::vector<Controller*> GetControllers;
+
 protected:
 	World* mWorld;
 	std::vector<Controller*> mControllers;

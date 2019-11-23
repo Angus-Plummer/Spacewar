@@ -1,7 +1,6 @@
 #pragma once
 #include "WorldObject.h"
 
-
 class Bullet : public WorldObject
 {
 public:

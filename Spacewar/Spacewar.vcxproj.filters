@@ -19,6 +19,9 @@
     <Filter Include="Source Files\Math">
       <UniqueIdentifier>{4fbc6464-5aa3-4c89-bb0f-0176d7804128}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Input">
+      <UniqueIdentifier>{9f5760ef-08a3-40c6-90b6-49cdb5b0fb16}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Controller.cpp">
@@ -54,6 +57,9 @@
     <ClCompile Include="Source\World\Bullet.cpp">
       <Filter>Source Files\World</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Input\InputManager.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Controller.h">
@@ -88,6 +94,12 @@
     </ClInclude>
     <ClInclude Include="Source\World\Bullet.h">
       <Filter>Source Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Input\InputManager.h">
+      <Filter>Source Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Input\InputBinding.h">
+      <Filter>Source Files\Input</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

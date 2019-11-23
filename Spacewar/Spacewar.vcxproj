@@ -22,6 +22,7 @@
     <ClCompile Include="Source\Controller.cpp" />
     <ClCompile Include="Source\GameInstance.cpp" />
     <ClCompile Include="Source\GameMode.cpp" />
+    <ClCompile Include="Source\Input\InputManager.cpp" />
     <ClCompile Include="Source\Math\Vector2D.cpp" />
     <ClCompile Include="Source\Spacewar.cpp" />
     <ClCompile Include="Source\World\Attractor.cpp" />
@@ -36,6 +37,8 @@
     <ClInclude Include="Source\Drawable.h" />
     <ClInclude Include="Source\GameInstance.h" />
     <ClInclude Include="Source\GameMode.h" />
+    <ClInclude Include="Source\Input\InputBinding.h" />
+    <ClInclude Include="Source\Input\InputManager.h" />
     <ClInclude Include="Source\Math\Vector2D.h" />
     <ClInclude Include="Source\World\Attractor.h" />
     <ClInclude Include="Source\World\Bullet.h" />
