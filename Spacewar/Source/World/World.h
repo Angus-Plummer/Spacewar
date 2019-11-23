@@ -18,11 +18,16 @@ public:
 	void AddShip(SpaceShip* newShip);
 	void AddDebris(Debris* newDebris);
 	void AddDebris(std::vector<Debris*> newDebris);
+	void RemoveWorldObject(WorldObject* worldObject);
 
 protected:
 	std::vector<Attractor*> mAttractors;
 	std::vector<SpaceShip*> mShips;
 	std::vector<Debris*> mDebris;
+
+	void RemoveAttractor(Attractor* attractor);
+	void RemoveShip(SpaceShip* ship);
+	void RemoveDebris(Debris* debris);
 
 	std::vector<WorldObject*> GetAllObjectsInWorld();
 

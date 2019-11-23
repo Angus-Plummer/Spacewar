@@ -2,6 +2,8 @@
 #include "../Math/Vector2D.h"
 #include "../Drawable.h"
 
+class World;
+
 // class for game objects which exist physically in the world
 class WorldObject : public Drawable
 {
@@ -10,6 +12,8 @@ public:
 	~WorldObject();
 
 	virtual void Update(const float deltaTime);
+
+	void SetWorld(World* world);
 
 	virtual void Kill();
 	bool IsAlive();
@@ -40,6 +44,7 @@ public:
 	virtual void OnCollision();
 
 protected:
+	World* mWorld;
 	bool mIsPhysicsEnabled;
 	bool mIsCollisionEnabled;
 	bool mIsAlive;

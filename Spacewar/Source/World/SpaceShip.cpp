@@ -1,6 +1,7 @@
 #include "SpaceShip.h"
 #include "../GameInstance.h"
 #include "Debris.h"
+#include "World.h"
 
 SpaceShip::SpaceShip()
 	: WorldObject()
@@ -23,37 +24,50 @@ void SpaceShip::Update(const float deltaTime)
 void SpaceShip::OnCollision()
 {
 	Kill();
+	int numPieces = 64 + rand() % 128;
+	GenerateDebris(numPieces);
 }
 
-std::vector<Debris*> SpaceShip::GenerateDebris(int numPieces) const
+void SpaceShip::GenerateDebris(int numPieces) const
 {
 	std::vector<Debris*> generatedDebris;
-	float shipArea = mShipWidth * mShipLength / 2.0f;
-	float averageAreaOfRemainingDebris = shipArea / numPieces;
+	const float shipArea = mShipWidth * mShipLength / 2.0f;
+	float remainingShipArea = shipArea;
+	std::vector<float> debrisAreas;
 	for (int i = 0; i < numPieces; i++)
 	{
-		float randomVariationFactor = (1.0f - (5 - rand() % 10) / 10.0f); // 0.5 - 1.5
-		float debrisArea = averageAreaOfRemainingDebris *randomVariationFactor;
-		averageAreaOfRemainingDebris += (averageAreaOfRemainingDebris - debrisArea) / (numPieces - i);
-		float lengthScale = sqrt(debrisArea);
+		// determine length scale of this debris
+		float randomVariationFactor = 0.1f + ((rand() % 18) / 10.0f); // 0.1 - 1.9
+		int remainingPieces = numPieces - i;
+		//float debrisArea = remainingShipArea / (float)remainingPieces * randomVariationFactor;
+		float debrisArea = shipArea / numPieces * randomVariationFactor;
+		debrisAreas.push_back(debrisArea);
+		remainingShipArea -= debrisArea;
+		float lengthScale = sqrt(debrisArea) * 1.5f;
 		Debris* newDebris = new Debris(lengthScale);
 
 		float debrisMass = mMass * debrisArea / shipArea;
 		newDebris->SetMass(debrisMass);
 
-		// position
+		// equally spread around centre at random distance
 		float distance = rand() % (int)(mShipWidth / 2.0f);
 		double angle = 2.0 * 3.141592653589793238463 * (double)i / (double)numPieces;
 		Vector2D offsetPos = Vector2D(cos(angle), sin(angle)) * distance;
 		Vector2D debrisPos = mPosition + offsetPos;
-		float explosionForceFactor = 200.0f / numPieces;
+		newDebris->SetPosition(debrisPos);
+
+		// same velocity as ship but with explosion force added
+		newDebris->SetVelocity(mVelocity);
+		// apply explosion force, more pieces -> less force on each
+		float explosionForceFactor = (100.0f + rand() % 200) / numPieces;
 		Vector2D force = (debrisPos - mPosition) * explosionForceFactor;
 		newDebris->AddForce(force);
-		newDebris->SetVelocity(mVelocity);
-		newDebris->SetPosition(debrisPos);
+
 		generatedDebris.push_back(newDebris);
 	}
-	return generatedDebris;
+
+	// add the debris to the world
+	mWorld->AddDebris(generatedDebris);
 }
 
 void SpaceShip::UpdatePhysics(const float deltaTime)

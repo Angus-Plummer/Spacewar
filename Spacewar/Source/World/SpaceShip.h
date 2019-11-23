@@ -15,7 +15,7 @@ public:
 	virtual void OnCollision() override;
 
 	// explosion
-	std::vector<Debris*> GenerateDebris(int numPieces) const;
+	void GenerateDebris(int numPieces) const;
 
 protected:
 	int mAmmo;

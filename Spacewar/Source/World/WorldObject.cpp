@@ -4,6 +4,7 @@
 WorldObject::WorldObject()
 	: mPosition()
 	, mRotation(0.0f)
+	, mWorld(nullptr)
 	, mIsPhysicsEnabled(false)
 	, mIsCollisionEnabled(false)
 	, mModel(nullptr)
@@ -29,6 +30,11 @@ void WorldObject::Update(const float deltaTime)
 	// TODO : move this drawing out to another class which iterates through all Drawables and draws
 	sf::RenderWindow* gameWindow = GameInstance::GetGameWindow();
 	Draw(gameWindow);
+}
+
+void WorldObject::SetWorld(World * world)
+{
+	mWorld = world;
 }
 
 void WorldObject::Kill()

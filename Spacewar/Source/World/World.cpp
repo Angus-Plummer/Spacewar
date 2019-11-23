@@ -39,21 +39,75 @@ void World::Update(const float deltaTime)
 void World::AddAttractor(Attractor * newAttractor)
 {
 	mAttractors.push_back(newAttractor);
+	newAttractor->SetWorld(this);
+}
+
+void World::RemoveAttractor(Attractor * attractor)
+{
+	std::vector<Attractor*>::iterator attractorIt = std::remove(mAttractors.begin(), mAttractors.end(), attractor);
+	mAttractors.erase(attractorIt, mAttractors.end());
+	delete attractor;
 }
 
 void World::AddShip(SpaceShip * newShip)
 {
 	mShips.push_back(newShip);
+	newShip->SetWorld(this);
+}
+
+void World::RemoveShip(SpaceShip * ship)
+{
+	std::vector<SpaceShip*>::iterator shipIt = std::remove(mShips.begin(), mShips.end(), ship);
+	mShips.erase(shipIt, mShips.end());
+	delete ship;
 }
 
 void World::AddDebris(Debris * newDebris)
 {
 	mDebris.push_back(newDebris);
+	newDebris->SetWorld(this);
 }
 
 void World::AddDebris(std::vector<Debris*> newDebris)
 {
+	for (int i = 0; i < newDebris.size(); i++)
+	{
+		newDebris[i]->SetWorld(this);
+	}
 	mDebris.insert(mDebris.end(), newDebris.begin(), newDebris.end());
+}
+
+void World::RemoveWorldObject(WorldObject * worldObject)
+{
+	// TODO : find cleaner nice OOP way to do this
+	Debris* debris = dynamic_cast<Debris*>(worldObject);
+	if (debris)
+	{
+		RemoveDebris(debris);
+	}
+	else
+	{
+		SpaceShip* ship = dynamic_cast<SpaceShip*>(worldObject);
+		if (ship)
+		{
+			RemoveShip(ship);
+		}
+		else
+		{
+			Attractor* attractor = dynamic_cast<Attractor*>(worldObject);
+			if (attractor)
+			{
+				RemoveAttractor(attractor);
+			}
+		}
+	}
+}
+
+void World::RemoveDebris(Debris * debris)
+{
+	std::vector<Debris*>::iterator debrisIt = std::remove(mDebris.begin(), mDebris.end(), debris);
+	mDebris.erase(debrisIt, mDebris.end());
+	delete debris;
 }
 
 std::vector<WorldObject*> World::GetAllObjectsInWorld()
@@ -72,7 +126,14 @@ void World::UpdateWorldObjects(const float deltaTime)
 	for (int i = 0; i < worldObjects.size(); i++)
 	{
 		WorldObject* worldObject = worldObjects[i];
-		worldObject->Update(deltaTime);
+		if (!worldObject->IsAlive())
+		{
+			RemoveWorldObject(worldObject);
+		}
+		else
+		{
+			worldObject->Update(deltaTime);
+		}
 	}
 }
 
@@ -94,8 +155,6 @@ void World::ApplyCollisions()
 		}
 	}
 
-	mDebris.erase(std::remove_if(mDebris.begin(), mDebris.end(), [](Debris* debris) {return (!debris->IsAlive()); }), mDebris.end());
-
 	// ship - ship collisions
 	for (int i = 0; i + 1 < mShips.size(); i++)
 	{
@@ -106,21 +165,6 @@ void World::ApplyCollisions()
 			ApplyCollision(currentShip, otherShip);
 		}
 	}
-
-	// create debris from dead ships and destroy them
-	for (int i = 0; i < mShips.size(); i++)
-	{
-		SpaceShip* ship = mShips[i];
-		if (!ship->IsAlive())
-		{
-			std::vector<Debris*> generatedDebris = ship->GenerateDebris(200);
-			AddDebris(generatedDebris);
-		}
-	}
-
-	// remove dead ships
-	mShips.erase(std::remove_if(mShips.begin(), mShips.end(), [](SpaceShip* ship) {return (!ship->IsAlive()); }), mShips.end());
-
 }
 
 void World::ApplyCollision(WorldObject* object1, WorldObject* object2)
