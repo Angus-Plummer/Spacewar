@@ -12,7 +12,9 @@ public:
 
 	// TODO: various functions for movement + firing
 
-	virtual void FireBullet();
+	void FireBullet();
+	void EnableThrusters();
+	void DisableThrusters();
 
 	virtual void OnCollision(WorldObject* collidingObject) override;
 
@@ -22,6 +24,8 @@ public:
 	void GenerateDebris(int numPieces) const;
 
 protected:
+	bool mIsThrustersEnabled;
+	float mFuel;
 	int mAmmo;
 	float mHealth;
 
@@ -35,6 +39,11 @@ protected:
 	float mShipLength;
 	virtual sf::Shape* GenerateModel() const override;
 	virtual void UpdateVisual() override;
+
+	// thrusters
+	std::vector<sf::Shape*> mThrustersModel;
+	std::vector<sf::Shape*> GenerateThrustersModel();
+	virtual void SetupVisual();
 
 	// movement trail
 	int mMaxNumTrailVertices = 30;

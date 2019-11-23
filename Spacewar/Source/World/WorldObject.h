@@ -18,6 +18,8 @@ public:
 	virtual void Kill();
 	bool IsAlive();
 
+	Vector2D ForwardVector() const;
+
 	void SetPosition(const Vector2D& newPos);
 	Vector2D GetPosition() const;
 

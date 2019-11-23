@@ -47,6 +47,11 @@ bool WorldObject::IsAlive()
 	return mIsAlive;
 }
 
+Vector2D WorldObject::ForwardVector() const
+{
+	return Vector2D(cos(mRotation * PI / 180.0), sin(mRotation * PI / 180.0));
+}
+
 void WorldObject::SetPosition(const Vector2D& newPos)
 {
 	mPosition = newPos;
