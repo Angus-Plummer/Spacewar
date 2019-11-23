@@ -20,9 +20,9 @@ Debris::Debris(float size)
 	SetupVisual();
 }
 
-void Debris::OnCollision()
+void Debris::OnCollision(WorldObject* collidingObject)
 {
-	Kill();
+	Kill(); // kill self
 }
 
 sf::Shape * Debris::GenerateModel() const

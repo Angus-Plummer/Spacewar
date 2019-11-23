@@ -122,7 +122,7 @@ float WorldObject::GetCollisionRadius() const
 	return mCollisionRadius;
 }
 
-void WorldObject::OnCollision()
+void WorldObject::OnCollision(WorldObject* collidingObject)
 {
 
 }

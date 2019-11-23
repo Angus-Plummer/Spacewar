@@ -1,21 +1,14 @@
 #pragma once
 #include "WorldObject.h"
 
-class Attractor : public WorldObject
+
+class Bullet : public WorldObject
 {
 public:
-	Attractor();
-	Attractor(float attractionFactor);
-
-	void SetAttractionFactor(float newAttractionFactor);
-	float GetAttractionFactor() const;
+	Bullet();
 
 	virtual void OnCollision(WorldObject* collidingObject) override;
-
-	void ApplyForce(WorldObject* otherObject);
-
 protected:
-	float mAttractionFactor;
 
 	virtual void UpdatePhysics(const float deltaTime) override;
 
@@ -24,5 +17,9 @@ public:
 	virtual void Draw(sf::RenderWindow* drawWindow) override;
 protected:
 	virtual sf::Shape* GenerateModel() const override;
+	virtual void UpdateVisual() override;
 
+	// movement trail
+	int mMaxNumTrailVertices = 30;
+	std::vector<sf::Vertex> mTrail;
 };

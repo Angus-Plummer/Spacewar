@@ -12,7 +12,11 @@ public:
 
 	// TODO: various functions for movement + firing
 
-	virtual void OnCollision() override;
+	virtual void FireBullet();
+
+	virtual void OnCollision(WorldObject* collidingObject) override;
+
+	virtual void Kill() override;
 
 	// explosion
 	void GenerateDebris(int numPieces) const;

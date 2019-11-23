@@ -32,6 +32,11 @@ float Attractor::GetAttractionFactor() const
 	return mAttractionFactor;
 }
 
+void Attractor::OnCollision(WorldObject * collidingObject)
+{
+	collidingObject->Kill();
+}
+
 void Attractor::ApplyForce(WorldObject* otherObject)
 {
 	// one way, only apply force to target

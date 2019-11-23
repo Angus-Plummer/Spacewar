@@ -7,7 +7,7 @@ public:
 	Debris();
 	Debris(float size);
 
-	virtual void OnCollision() override;
+	virtual void OnCollision(WorldObject* collidingObject) override;
 
 	// Drawable Implementation
 protected:

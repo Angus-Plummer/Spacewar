@@ -4,6 +4,7 @@
 class WorldObject;
 class Attractor;
 class SpaceShip;
+class Bullet;
 class Debris;
 
 class World
@@ -16,6 +17,7 @@ public:
 
 	void AddAttractor(Attractor* newAttractor);
 	void AddShip(SpaceShip* newShip);
+	void AddBullet(Bullet* newBullet);
 	void AddDebris(Debris* newDebris);
 	void AddDebris(std::vector<Debris*> newDebris);
 	void RemoveWorldObject(WorldObject* worldObject);
@@ -23,10 +25,12 @@ public:
 protected:
 	std::vector<Attractor*> mAttractors;
 	std::vector<SpaceShip*> mShips;
+	std::vector<Bullet*> mBullets;
 	std::vector<Debris*> mDebris;
 
 	void RemoveAttractor(Attractor* attractor);
 	void RemoveShip(SpaceShip* ship);
+	void RemoveBullet(Bullet* bullet);
 	void RemoveDebris(Debris* debris);
 
 	std::vector<WorldObject*> GetAllObjectsInWorld();

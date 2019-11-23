@@ -1,6 +1,7 @@
 #include "SpaceShip.h"
 #include "../GameInstance.h"
 #include "Debris.h"
+#include "Bullet.h"
 #include "World.h"
 
 SpaceShip::SpaceShip()
@@ -21,11 +22,29 @@ void SpaceShip::Update(const float deltaTime)
 	WorldObject::Update(deltaTime);
 }
 
-void SpaceShip::OnCollision()
+void SpaceShip::FireBullet()
+{
+	Bullet* bullet = new Bullet();
+	Vector2D firingPos = mPosition + Vector2D(cos(mRotation * PI / 180.0), sin(mRotation * PI / 180.0)) * mShipLength;
+	bullet->SetPosition(firingPos);
+	float bulletSpeed = 200.0f;
+	Vector2D bulletVelocity = (firingPos - mPosition).Normalised() * bulletSpeed;
+	bullet->SetVelocity(bulletVelocity);
+
+	mWorld->AddBullet(bullet);
+}
+
+void SpaceShip::OnCollision(WorldObject* collidingObject)
 {
 	Kill();
+}
+
+void SpaceShip::Kill()
+{
+	WorldObject::Kill();
 	int numPieces = 64 + rand() % 64;
 	GenerateDebris(numPieces);
+	FireBullet();
 }
 
 void SpaceShip::GenerateDebris(int numPieces) const
@@ -45,7 +64,7 @@ void SpaceShip::GenerateDebris(int numPieces) const
 
 		// equally spread around centre at random distance
 		float distance = rand() % (int)(mShipWidth / 2.0f);
-		double angle = 2.0 * 3.141592653589793238463 * (double)i / (double)numPieces;
+		double angle = 2.0 * PI * (double)i / (double)numPieces;
 		Vector2D offsetPos = Vector2D(cos(angle), sin(angle)) * distance;
 		Vector2D debrisPos = mPosition + offsetPos;
 		newDebris->SetPosition(debrisPos);
@@ -68,7 +87,7 @@ void SpaceShip::UpdatePhysics(const float deltaTime)
 {
 	WorldObject::UpdatePhysics(deltaTime);
 	double radians = atan2(mVelocity.Y, mVelocity.X);
-	double degrees = radians * (180.0 / 3.141592653589793238463);
+	double degrees = radians * (180.0 / PI);
 	mRotation = (float)degrees;
 }
 

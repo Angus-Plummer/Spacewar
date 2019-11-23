@@ -2,6 +2,7 @@
 #include "WorldObject.h"
 #include "Attractor.h"
 #include "SpaceShip.h"
+#include "Bullet.h"
 #include "Debris.h"
 #include <algorithm>
 
@@ -36,33 +37,46 @@ void World::Update(const float deltaTime)
 	UpdateWorldObjects(deltaTime);
 }
 
-void World::AddAttractor(Attractor * newAttractor)
+void World::AddAttractor(Attractor* newAttractor)
 {
 	mAttractors.push_back(newAttractor);
 	newAttractor->SetWorld(this);
 }
 
-void World::RemoveAttractor(Attractor * attractor)
+void World::RemoveAttractor(Attractor* attractor)
 {
 	std::vector<Attractor*>::iterator attractorIt = std::remove(mAttractors.begin(), mAttractors.end(), attractor);
 	mAttractors.erase(attractorIt, mAttractors.end());
 	delete attractor;
 }
 
-void World::AddShip(SpaceShip * newShip)
+void World::AddShip(SpaceShip* newShip)
 {
 	mShips.push_back(newShip);
 	newShip->SetWorld(this);
 }
 
-void World::RemoveShip(SpaceShip * ship)
+void World::AddBullet(Bullet* newBullet)
+{
+	mBullets.push_back(newBullet);
+	newBullet->SetWorld(this);
+}
+
+void World::RemoveShip(SpaceShip* ship)
 {
 	std::vector<SpaceShip*>::iterator shipIt = std::remove(mShips.begin(), mShips.end(), ship);
 	mShips.erase(shipIt, mShips.end());
 	delete ship;
 }
 
-void World::AddDebris(Debris * newDebris)
+void World::RemoveBullet(Bullet * bullet)
+{
+	std::vector<Bullet*>::iterator bulletIt = std::remove(mBullets.begin(), mBullets.end(), bullet);
+	mBullets.erase(bulletIt, mBullets.end());
+	delete bullet;
+}
+
+void World::AddDebris(Debris* newDebris)
 {
 	mDebris.push_back(newDebris);
 	newDebris->SetWorld(this);
@@ -87,17 +101,25 @@ void World::RemoveWorldObject(WorldObject * worldObject)
 	}
 	else
 	{
-		SpaceShip* ship = dynamic_cast<SpaceShip*>(worldObject);
-		if (ship)
+		Bullet* bullet = dynamic_cast<Bullet*>(worldObject);
+		if (bullet)
 		{
-			RemoveShip(ship);
+			RemoveBullet(bullet);
 		}
 		else
 		{
-			Attractor* attractor = dynamic_cast<Attractor*>(worldObject);
-			if (attractor)
+			SpaceShip* ship = dynamic_cast<SpaceShip*>(worldObject);
+			if (ship)
 			{
-				RemoveAttractor(attractor);
+				RemoveShip(ship);
+			}
+			else
+			{
+				Attractor* attractor = dynamic_cast<Attractor*>(worldObject);
+				if (attractor)
+				{
+					RemoveAttractor(attractor);
+				}
 			}
 		}
 	}
@@ -115,6 +137,7 @@ std::vector<WorldObject*> World::GetAllObjectsInWorld()
 	std::vector<WorldObject*> allObjects;
 	allObjects.insert(allObjects.end(), mDebris.begin(), mDebris.end());
 	allObjects.insert(allObjects.end(), mShips.begin(), mShips.end());
+	allObjects.insert(allObjects.end(), mBullets.begin(), mBullets.end());
 	allObjects.insert(allObjects.end(), mAttractors.begin(), mAttractors.end());
 
 	return allObjects;
@@ -155,14 +178,20 @@ void World::ApplyCollisions()
 		}
 	}
 
-	// ship - ship collisions
-	for (int i = 0; i + 1 < mShips.size(); i++)
+	// bullet + ship - ship collisions
+	for (int i = 0; i < mShips.size(); i++)
 	{
 		SpaceShip* currentShip = mShips[i];
 		for (int j = i + 1; j < mShips.size(); j++)
 		{
 			SpaceShip* otherShip = mShips[j];
 			ApplyCollision(currentShip, otherShip);
+		}
+
+		for (int j = 0; j < mBullets.size(); j++)
+		{
+			Bullet* bullet = mBullets[j];
+			ApplyCollision(currentShip, bullet);
 		}
 	}
 }
@@ -183,8 +212,8 @@ void World::ApplyCollision(WorldObject* object1, WorldObject* object2)
 		if (separation < collisionSeparation)
 		{
 			// collision
-			object1->OnCollision();
-			object2->OnCollision();
+			object1->OnCollision(object2);
+			object2->OnCollision(object1);
 		}
 	}
 }

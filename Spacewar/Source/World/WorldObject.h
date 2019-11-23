@@ -41,7 +41,7 @@ public:
 	void SetCollisionRadius(float radius);
 	float GetCollisionRadius() const;
 
-	virtual void OnCollision();
+	virtual void OnCollision(WorldObject* collidingObject);
 
 protected:
 	World* mWorld;
