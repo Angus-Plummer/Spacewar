@@ -43,7 +43,7 @@ sf::Shape * Debris::GenerateModel() const
 	debrisModel->setOrigin(centre);
 
 	debrisModel->setFillColor(sf::Color::Transparent);
-	debrisModel->setOutlineThickness(-1.0f);
+	debrisModel->setOutlineThickness(1.0f);
 	debrisModel->setOutlineColor(sf::Color::White);//sf::Color(255, 50 + rand() % 150, 0));
 
 	return debrisModel;

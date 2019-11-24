@@ -42,6 +42,15 @@ float Vector2D::DotProd(const Vector2D & otherVec) const
 	return result;
 }
 
+Vector2D Vector2D::Rotated(float rotationAngle)
+{
+	Vector2D rotatedVector;
+	double radAngle = rotationAngle * PI / 180.0;
+	rotatedVector.X = (float)(X * cos(radAngle)	+ Y * sin(radAngle));
+	rotatedVector.Y = (float)(-1.0 * X * sin(radAngle) + Y * cos(radAngle));
+	return rotatedVector;
+}
+
 Vector2D& Vector2D::operator+=(const Vector2D & rhs)
 {
 	X += rhs.X;

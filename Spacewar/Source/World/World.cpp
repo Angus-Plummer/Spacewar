@@ -15,6 +15,8 @@ World::World()
 	Vector2D lowerScreenBound = WorldToScreenPos(mBounds.first);
 	mBoxBounds.setPosition(lowerScreenBound.X, lowerScreenBound.Y);
 	mBoxBounds.setFillColor(sf::Color::Transparent);
+
+	InitialiseBackground();
 }
 
 World::~World()
@@ -34,6 +36,22 @@ void World::Update(const float deltaTime)
 {
 	ApplyPhysicsInteraction(deltaTime);
 	UpdateWorldObjects(deltaTime);
+
+	// update background stars
+	for (int i = 0; i < mBackgroundStars.size(); i++)
+	{
+		BackgroundStarLayer& starLayer = mBackgroundStars[i];
+		for (int j = 0; j < starLayer.Stars.size(); j++)
+		{
+			sf::CircleShape& star = starLayer.Stars[j];
+			Vector2D starPos(star.getPosition().x, star.getPosition().y);
+			starPos += starLayer.Velocity * deltaTime;
+			Vector2D worldPos = ScreenToWorldPos(starPos);
+			worldPos = WrapAround(worldPos);
+			starPos = WorldToScreenPos(worldPos);
+			star.setPosition(sf::Vector2f(starPos.X, starPos.Y));
+		}
+	}
 
 	sf::RenderWindow* gameWindow = GameInstance::GetGameWindow();
 	Draw(gameWindow);
@@ -293,6 +311,16 @@ void World::ApplyAttractors(std::vector<WorldObject*>& targetObjects)
 
 void World::Draw(sf::RenderWindow* drawWindow)
 {
+	// draw background
+	for (int i = 0; i < mBackgroundStars.size(); i++)
+	{
+		BackgroundStarLayer starLayer = mBackgroundStars[i];
+		for (int j = 0; j < starLayer.Stars.size(); j++)
+		{
+			drawWindow->draw(starLayer.Stars[j]);
+		}
+	}
+
 	// draw all objects in the world
 	std::vector<WorldObject*> worldObjects = GetAllObjectsInWorld();
 	for (int i = 0; i < worldObjects.size(); i++)
@@ -312,6 +340,35 @@ void World::Draw(sf::RenderWindow* drawWindow)
 	mBoxBounds.setOutlineColor(sf::Color::White);
 	mBoxBounds.setOutlineThickness(2.0f);
 	drawWindow->draw(mBoxBounds);
+}
+
+void World::InitialiseBackground()
+{
+	Vector2D lowerScreenBound = WorldToScreenPos(mBounds.first);
+	Vector2D upperScreenBound = WorldToScreenPos(mBounds.second);
+
+	Vector2D primaryMovementDirection(-100.0f + rand() % 200, -100.0f + rand() % 200);
+	primaryMovementDirection.Normalise();
+	float maxSpeed = 5.0f;
+	float angleSpread = 45.0f;
+	for (int i = 0; i < 20; i++)
+	{
+		BackgroundStarLayer newStarLayer;
+		float angleDeviation = -(angleSpread / 2.0f) + angleSpread * (rand() % 1000 / 1000.0f);
+		newStarLayer.Velocity = primaryMovementDirection.Rotated(angleDeviation) * maxSpeed;
+		for (int j = 0; j < 20; j++)
+		{
+			float xPos = lowerScreenBound.X + rand() % (int)(upperScreenBound.X - lowerScreenBound.X);
+			float yPos = lowerScreenBound.Y + rand() % (int)(upperScreenBound.Y - lowerScreenBound.Y);
+			float radius = 1.0f * (rand() % 100) / 100.0f;
+			sf::CircleShape newStar(radius, 5);
+			newStar.setOrigin(radius, radius);
+			newStar.setPosition(sf::Vector2f(xPos, yPos));
+			newStar.setFillColor(sf::Color::White);
+			newStarLayer.Stars.push_back(newStar);
+		}
+		mBackgroundStars.push_back(newStarLayer);
+	}
 }
 
 Vector2D World::WrapAround(Vector2D position)

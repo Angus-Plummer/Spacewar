@@ -15,6 +15,7 @@ SpaceShip::SpaceShip()
 	, mThrusterImpulse(100.0f)
 	, mManualRotationRate(180.0f)
 {
+	mIsFaceMovementDirection = true;
 	mIsPhysicsEnabled = true;
 	mIsCollisionEnabled = true;
 	mCollisionRadius = mShipWidth / 2.0f;
@@ -94,7 +95,7 @@ void SpaceShip::OnCollision(WorldObject* collidingObject)
 void SpaceShip::Kill()
 {
 	WorldObject::Kill();
-	int numPieces = 64 + rand() % 64;
+	int numPieces = 128;
 	GenerateDebris(numPieces);
 }
 
@@ -115,7 +116,7 @@ void SpaceShip::GenerateDebris(int numPieces) const
 
 		// equally spread around centre at random distance
 		float distance = (float) (rand() % (int)(mShipWidth / 2.0f));
-		float angle = 2.0 * PI * (float)i / (float)numPieces;
+		float angle = 2.0f * PI * (float)i / (float)numPieces;
 		Vector2D offsetPos = Vector2D(cos(angle), sin(angle)) * distance;
 		Vector2D debrisPos = mPosition + offsetPos;
 		newDebris->SetPosition(debrisPos);
@@ -145,10 +146,6 @@ void SpaceShip::UpdatePhysics(const float deltaTime)
 	}
 
 	WorldObject::UpdatePhysics(deltaTime);
-
-	//double radians = atan2(mVelocity.Y, mVelocity.X);
-	//double degrees = radians * (180.0 / PI);
-	//mRotation = (float)degrees;
 }
 
 void SpaceShip::Draw(sf::RenderWindow* drawWindow)
@@ -216,16 +213,6 @@ void SpaceShip::UpdateVisual()
 			thrusterComponent->setRotation(mRotation);
 		}
 	}
-
-	/*// destroy first element in trail and add current position to the end
-	if (mTrail.size() >= mMaxNumTrailVertices)
-	{
-		mTrail.erase(mTrail.begin());
-	}
-	Vector2D newTrailPos = mPosition;// -mVelocity.Normalised() * mShipLength / 3.0f;
-	sf::Vertex newVertex(sf::Vector2f(newTrailPos.X, newTrailPos.Y));
-	mTrail.push_back(newVertex);
-	*/
 }
 
 std::vector<sf::Shape*> SpaceShip::GenerateThrustersModel()

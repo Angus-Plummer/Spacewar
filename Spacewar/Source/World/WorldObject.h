@@ -46,6 +46,9 @@ public:
 	void SetCollisionRadius(float radius);
 	float GetCollisionRadius() const;
 
+	void SetIsFaceMovementDirection(bool isFaceMoveDirection);
+	bool GetIsFaceMovementDirection() const;
+
 	virtual void OnCollision(WorldObject* collidingObject);
 
 protected:
@@ -62,6 +65,7 @@ protected:
 
 	float mRotation;
 	float mAngularVelocity;
+	bool mIsFaceMovementDirection;
 
 	virtual void OnLeaveWorldBounds();
 

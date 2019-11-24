@@ -15,6 +15,7 @@ WorldObject::WorldObject()
 	, mCollisionRadius(0.0f)
 	, mIsAlive(true)
 	, mIsWrapAround(true)
+	, mIsFaceMovementDirection(false)
 {
 }
 
@@ -142,6 +143,16 @@ float WorldObject::GetCollisionRadius() const
 	return mCollisionRadius;
 }
 
+void WorldObject::SetIsFaceMovementDirection(bool isFaceMoveDirection)
+{
+	mIsFaceMovementDirection = isFaceMoveDirection;
+}
+
+bool WorldObject::GetIsFaceMovementDirection() const
+{
+	return mIsFaceMovementDirection;
+}
+
 void WorldObject::OnCollision(WorldObject* collidingObject)
 {
 
@@ -161,8 +172,17 @@ void WorldObject::UpdatePhysics(const float deltaTime)
 	mPendingForce = Vector2D();
 	mPosition += mVelocity * deltaTime;
 
-	mRotation += mAngularVelocity * deltaTime;
-	mRotation = fmodf(mRotation, 360.0f);
+	if (mIsFaceMovementDirection)
+	{
+		double radians = atan2(mVelocity.Y, mVelocity.X);
+		double degrees = radians * (180.0 / PI);
+		mRotation = (float)degrees;
+	}
+	else
+	{
+		mRotation += mAngularVelocity * deltaTime;
+		mRotation = fmodf(mRotation, 360.0f);
+	}
 }
 
 void WorldObject::Draw(sf::RenderWindow* drawWindow)

@@ -32,8 +32,8 @@ void GameInstance::Initialise()
 	// Initialise Game Window
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 8;
-	kGameWindow = new sf::RenderWindow(sf::VideoMode(1280, 720), "Spacewar!", sf::Style::Default, settings);
-	kGameWindow->setFramerateLimit(60);
+	kGameWindow = new sf::RenderWindow(sf::VideoMode(1920, 1080), "Spacewar!", sf::Style::Default, settings);
+	kGameWindow->setVerticalSyncEnabled(true);
 
 	// Initialise Input Manager
 	kInputManager = new InputManager();

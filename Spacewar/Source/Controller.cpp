@@ -15,6 +15,7 @@ void Controller::Initialise()
 void Controller::SetShip(SpaceShip* newShip)
 {
 	mShip = newShip;
+	mShip->SetIsFaceMovementDirection(false);
 }
 
 SpaceShip * Controller::GetShip() const

@@ -39,11 +39,13 @@ void GameMode::Initialise()
 
 	// create the player ship and add to the world
 	SpaceShip* playerShip = nullptr;
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		playerShip = new SpaceShip();
-		playerShip->SetPosition(Vector2D(-500.0f + (float)(rand() % 1000), -300.0f + (float)(rand() % 600)));
-		playerShip->SetVelocity(Vector2D((float)(rand() % 100 - 50), (float)(rand() % 100 - 50)));
+		Vector2D spawnPos = mWorld->GetLowerBound();
+		spawnPos += Vector2D((float)(rand() % 600) - 300.0f, (float)(rand() % 600) - 300.0f);
+		playerShip->SetPosition(spawnPos);
+		playerShip->SetVelocity(Vector2D((float)(rand() % 100 - 50.0f), (float)(rand() % 100 - 50.0f)));
 		mWorld->AddShip(playerShip);
 	}
 	
@@ -51,6 +53,7 @@ void GameMode::Initialise()
 
 	// create the star
 	Attractor* star1 = new Attractor(2.0f);
+	//star1->SetPosition(Vector2D(0.0f, 0.0f));
 	star1->SetPosition(Vector2D(-200.0f, 0.0f));
 	star1->SetVelocity(Vector2D(0.0f, -50.0f));
 	mWorld->AddAttractor(star1);

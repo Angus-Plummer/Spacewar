@@ -6,7 +6,7 @@ Attractor::Attractor()
 {
 	mIsPhysicsEnabled = true;
 	mIsCollisionEnabled = true;
-	mCollisionRadius = 25.0f;
+	mCollisionRadius = 20.0f;
 	mMass = 10000000.0f;
 	SetupVisual();
 }
@@ -17,7 +17,7 @@ Attractor::Attractor(float attractionFactor)
 {
 	mIsPhysicsEnabled = true;
 	mIsCollisionEnabled = true;
-	mCollisionRadius = 25.0f;
+	mCollisionRadius = 20.0f;
 	mMass = 1000000.0f;
 	SetupVisual();
 }

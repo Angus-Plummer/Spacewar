@@ -9,6 +9,14 @@ class SpaceShip;
 class Bullet;
 class Debris;
 
+struct BackgroundStarLayer
+{
+	// TODO: replace array of stars with a transparent texture of stars
+	std::vector<sf::CircleShape> Stars;
+	Vector2D Velocity;
+};
+
+
 class World : public Drawable
 {
 public:
@@ -65,4 +73,7 @@ protected:
 protected:
 	virtual void Draw(sf::RenderWindow* drawWindow) override;
 	sf::RectangleShape mBoxBounds;
+
+	void InitialiseBackground();
+	std::vector<BackgroundStarLayer> mBackgroundStars;
 };
