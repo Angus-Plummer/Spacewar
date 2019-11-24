@@ -11,12 +11,6 @@ World::World()
 	: mOrigin(0.0f, 0.0f)
 	, mBounds(Vector2D(0.0f, 0.0f), Vector2D(1280.0f, 720.0f))
 {
-	mBoxBounds.setSize(sf::Vector2f(mBounds.second.X - mBounds.first.X, mBounds.second.Y - mBounds.first.Y));
-	Vector2D lowerScreenBound = WorldToScreenPos(mBounds.first);
-	mBoxBounds.setPosition(lowerScreenBound.X, lowerScreenBound.Y);
-	mBoxBounds.setFillColor(sf::Color::Transparent);
-
-	InitialiseBackground();
 }
 
 World::~World()
@@ -30,6 +24,17 @@ World::~World()
 	mShips.clear();
 	mDebris.clear();
 	mBullets.clear();
+}
+
+void World::Initialise()
+{
+	// initialise bound box
+	mBoxBounds.setSize(sf::Vector2f(mBounds.second.X - mBounds.first.X, mBounds.second.Y - mBounds.first.Y));
+	Vector2D lowerScreenBound = WorldToScreenPos(mBounds.first);
+	mBoxBounds.setPosition(lowerScreenBound.X, lowerScreenBound.Y);
+	mBoxBounds.setFillColor(sf::Color::Transparent);
+
+	InitialiseBackground();
 }
 
 void World::Update(const float deltaTime)
@@ -47,8 +52,11 @@ void World::Update(const float deltaTime)
 			Vector2D starPos(star.getPosition().x, star.getPosition().y);
 			starPos += starLayer.Velocity * deltaTime;
 			Vector2D worldPos = ScreenToWorldPos(starPos);
-			worldPos = WrapAround(worldPos);
-			starPos = WorldToScreenPos(worldPos);
+			if (!IsWithinBounds(worldPos))
+			{
+				worldPos = WrapAround(worldPos);
+				starPos = WorldToScreenPos(worldPos);
+			}
 			star.setPosition(sf::Vector2f(starPos.X, starPos.Y));
 		}
 	}
@@ -349,14 +357,15 @@ void World::InitialiseBackground()
 
 	Vector2D primaryMovementDirection(-100.0f + rand() % 200, -100.0f + rand() % 200);
 	primaryMovementDirection.Normalise();
-	float maxSpeed = 5.0f;
+	float maxSpeed = 15.0f;
 	float angleSpread = 45.0f;
 	for (int i = 0; i < 20; i++)
 	{
 		BackgroundStarLayer newStarLayer;
 		float angleDeviation = -(angleSpread / 2.0f) + angleSpread * (rand() % 1000 / 1000.0f);
-		newStarLayer.Velocity = primaryMovementDirection.Rotated(angleDeviation) * maxSpeed;
-		for (int j = 0; j < 20; j++)
+		float speed = maxSpeed * (rand() % 10000 / 10000.0f);
+		newStarLayer.Velocity = primaryMovementDirection.Rotated(angleDeviation) * speed;
+		for (int j = 0; j < 30; j++)
 		{
 			float xPos = lowerScreenBound.X + rand() % (int)(upperScreenBound.X - lowerScreenBound.X);
 			float yPos = lowerScreenBound.Y + rand() % (int)(upperScreenBound.Y - lowerScreenBound.Y);
@@ -374,20 +383,20 @@ void World::InitialiseBackground()
 Vector2D World::WrapAround(Vector2D position)
 {
 	Vector2D newPos(position);
+	// toroidal wrap around
+
 	Vector2D lowerBound = mBounds.first;
 	Vector2D upperBound = mBounds.second;
-	if (upperBound.X == lowerBound.X || upperBound.Y == lowerBound.Y)
+	// avoid div by zero error
+	if (upperBound.X != lowerBound.X && upperBound.Y != lowerBound.Y)
 	{
-		// avoid div by zero error
-		return newPos;
+		auto ArithmeticModulus = [](float val, float range) {return val - range * floor(val / range); };
+
+		float xmod = ArithmeticModulus(position.X - lowerBound.X, upperBound.X - lowerBound.X);
+		float ymod = ArithmeticModulus(position.Y - lowerBound.Y, upperBound.Y - lowerBound.Y);
+		newPos.X = lowerBound.X + xmod;
+		newPos.Y = lowerBound.Y + ymod;
 	}
-	auto ArithmeticModulus = [](float val, float range) {return val - range * floor(val / range); };
-
-	float xmod = ArithmeticModulus(position.X - lowerBound.X, upperBound.X - lowerBound.X);
-	float ymod = ArithmeticModulus(position.Y - lowerBound.Y, upperBound.Y - lowerBound.Y);
-	newPos.X = lowerBound.X + xmod;
-	newPos.Y = lowerBound.Y + ymod;
-
 	return newPos;
 }
 

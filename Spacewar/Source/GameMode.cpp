@@ -31,6 +31,7 @@ void GameMode::Initialise()
 	Vector2D windowSize((float)(gameWindow->getSize().x), (float)(gameWindow->getSize().y));
 	mWorld->SetOrigin(windowSize / 2.0f);
 	mWorld->SetBounds(mWorld->ScreenToWorldPos(windowSize * 0.1f), mWorld->ScreenToWorldPos(windowSize * (0.9f)));
+	mWorld->Initialise();
 
 	// create the controllers
 	Controller* playerController = new Controller();

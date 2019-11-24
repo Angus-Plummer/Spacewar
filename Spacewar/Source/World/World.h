@@ -23,6 +23,7 @@ public:
 	World();
 	~World();
 
+	void Initialise();
 	void Update(const float deltaTime);
 
 	Vector2D GetLowerBound() const;
