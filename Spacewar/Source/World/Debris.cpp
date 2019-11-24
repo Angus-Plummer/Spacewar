@@ -22,6 +22,11 @@ Debris::Debris(float size)
 	SetupVisual();
 }
 
+void Debris::Kill()
+{
+	Destroy();
+}
+
 void Debris::OnCollision(WorldObject* collidingObject)
 {
 	Kill(); // kill self

@@ -21,7 +21,8 @@
   <ItemGroup>
     <ClCompile Include="Source\Controller.cpp" />
     <ClCompile Include="Source\GameInstance.cpp" />
-    <ClCompile Include="Source\GameMode.cpp" />
+    <ClCompile Include="Source\GameModes\BattleMode.cpp" />
+    <ClCompile Include="Source\GameModes\GameMode.cpp" />
     <ClCompile Include="Source\Input\InputManager.cpp" />
     <ClCompile Include="Source\Math\Vector2D.cpp" />
     <ClCompile Include="Source\Spacewar.cpp" />
@@ -36,7 +37,8 @@
     <ClInclude Include="Source\Controller.h" />
     <ClInclude Include="Source\Drawable.h" />
     <ClInclude Include="Source\GameInstance.h" />
-    <ClInclude Include="Source\GameMode.h" />
+    <ClInclude Include="Source\GameModes\BattleMode.h" />
+    <ClInclude Include="Source\GameModes\GameMode.h" />
     <ClInclude Include="Source\Input\InputBinding.h" />
     <ClInclude Include="Source\Input\InputManager.h" />
     <ClInclude Include="Source\Math\Vector2D.h" />

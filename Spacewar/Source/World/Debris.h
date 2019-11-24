@@ -7,6 +7,8 @@ public:
 	Debris();
 	Debris(float size);
 
+	virtual void Kill() override;
+
 	virtual void OnCollision(WorldObject* collidingObject) override;
 
 protected:

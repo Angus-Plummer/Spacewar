@@ -1,5 +1,5 @@
 #include "GameInstance.h"
-#include "GameMode.h"
+#include "GameModes/BattleMode.h"
 #include "World/World.h"
 #include "World/WorldObject.h"
 #include <SFML/Window.hpp>
@@ -39,7 +39,7 @@ void GameInstance::Initialise()
 	kInputManager = new InputManager();
 
 	// Initialise Game Mode
-	mGameMode = new GameMode();
+	mGameMode = new BattleMode(2);
 	mGameMode->Initialise();
 }
 
@@ -78,12 +78,12 @@ void GameInstance::Update(const float deltaTime)
 	}
 }
 
-InputManager * GameInstance::GetInputManager()
+InputManager* GameInstance::GetInputManager()
 {
 	return kInputManager;
 }
 
-sf::RenderWindow * GameInstance::GetGameWindow()
+sf::RenderWindow* GameInstance::GetGameWindow()
 {
 	return kGameWindow;
 }

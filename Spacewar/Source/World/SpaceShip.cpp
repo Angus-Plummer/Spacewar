@@ -95,8 +95,13 @@ void SpaceShip::OnCollision(WorldObject* collidingObject)
 void SpaceShip::Kill()
 {
 	WorldObject::Kill();
+	
 	int numPieces = 128;
 	GenerateDebris(numPieces);
+
+	SetIsPhysicsEnabled(false);
+	SetIsCollisionEnabled(false);
+	SetIsDrawingEnabled(false);
 }
 
 void SpaceShip::GenerateDebris(int numPieces) const

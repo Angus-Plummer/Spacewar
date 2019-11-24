@@ -3,7 +3,9 @@
 #include "Input/InputManager.h"
 #include "World/SpaceShip.h"
 
-Controller::Controller() : mShip(nullptr)
+Controller::Controller(int id) 
+	: mId(id)
+	, mShip(nullptr)
 {
 }
 

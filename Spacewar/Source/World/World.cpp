@@ -225,7 +225,7 @@ void World::UpdateWorldObjects(const float deltaTime)
 	for (int i = 0; i < worldObjects.size(); i++)
 	{
 		WorldObject* worldObject = worldObjects[i];
-		if (!worldObject->IsAlive())
+		if (worldObject->IsPendingDestroy())
 		{
 			RemoveWorldObject(worldObject);
 		}
@@ -334,7 +334,10 @@ void World::Draw(sf::RenderWindow* drawWindow)
 	for (int i = 0; i < worldObjects.size(); i++)
 	{
 		WorldObject* worldObject = worldObjects[i];
-		worldObject->Draw(drawWindow);
+		if (worldObject->IsDrawingEnabled())
+		{
+			worldObject->Draw(drawWindow);
+		}
 	}
 
 	// draw the world bounds

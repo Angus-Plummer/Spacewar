@@ -12,7 +12,6 @@ public:
 
 	virtual void OnCollision(WorldObject* collidingObject) override;
 protected:
-	bool mIsBeingKilled;
 
 	virtual void UpdatePhysics(const float deltaTime) override;
 

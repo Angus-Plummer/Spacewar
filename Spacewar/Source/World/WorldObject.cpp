@@ -14,6 +14,7 @@ WorldObject::WorldObject()
 	, mMass(1.0f)
 	, mCollisionRadius(0.0f)
 	, mIsAlive(true)
+	, mIsPendingDestroy(false)
 	, mIsWrapAround(true)
 	, mIsFaceMovementDirection(false)
 {
@@ -43,19 +44,30 @@ void WorldObject::SetWorld(World * world)
 	mWorld = world;
 }
 
+void WorldObject::Destroy()
+{
+	mIsPendingDestroy = true;
+	SetIsDrawingEnabled(false);
+}
+
+bool WorldObject::IsPendingDestroy() const
+{
+	return mIsPendingDestroy;
+}
+
 void WorldObject::Kill()
 {
 	mIsAlive = false;
 }
 
-bool WorldObject::IsAlive()
+bool WorldObject::IsAlive() const
 {
 	return mIsAlive;
 }
 
 Vector2D WorldObject::ForwardVector() const
 {
-	return Vector2D(cos(mRotation * PI / 180.0), sin(mRotation * PI / 180.0));
+	return Vector2D((float)cos(mRotation * PI / 180.0), (float)sin(mRotation * PI / 180.0));
 }
 
 void WorldObject::SetPosition(const Vector2D& newPos)

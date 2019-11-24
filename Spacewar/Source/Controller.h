@@ -5,13 +5,14 @@ class SpaceShip;
 class Controller
 {
 public:
-	Controller();
+	Controller(int id);
 
 	void Initialise();
 
 	void SetShip(SpaceShip* newShip);
 	SpaceShip* GetShip() const;
 protected:
+	int mId;
 	SpaceShip* mShip;
 
 	void SetupInput();

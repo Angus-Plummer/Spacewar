@@ -15,8 +15,11 @@ public:
 
 	void SetWorld(World* world);
 
+	virtual void Destroy();
+	bool IsPendingDestroy() const;
+
 	virtual void Kill();
-	bool IsAlive();
+	bool IsAlive() const;
 
 	Vector2D ForwardVector() const;
 
@@ -56,6 +59,7 @@ protected:
 	bool mIsPhysicsEnabled;
 	bool mIsCollisionEnabled;
 	bool mIsAlive;
+	bool mIsPendingDestroy;
 	float mCollisionRadius;
 	float mMass;
 	Vector2D mPosition;

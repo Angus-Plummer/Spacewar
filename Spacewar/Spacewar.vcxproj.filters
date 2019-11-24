@@ -22,6 +22,9 @@
     <Filter Include="Source Files\Input">
       <UniqueIdentifier>{9f5760ef-08a3-40c6-90b6-49cdb5b0fb16}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GameModes">
+      <UniqueIdentifier>{cd81feb5-ef98-4893-bbbf-98af46659b8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Controller.cpp">
@@ -45,9 +48,6 @@
     <ClCompile Include="Source\World\World.cpp">
       <Filter>Source Files\World</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameMode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\World\Attractor.cpp">
       <Filter>Source Files\World</Filter>
     </ClCompile>
@@ -59,6 +59,12 @@
     </ClCompile>
     <ClCompile Include="Source\Input\InputManager.cpp">
       <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameModes\BattleMode.cpp">
+      <Filter>Source Files\GameModes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameModes\GameMode.cpp">
+      <Filter>Source Files\GameModes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -80,9 +86,6 @@
     <ClInclude Include="Source\World\World.h">
       <Filter>Source Files\World</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameMode.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\World\Attractor.h">
       <Filter>Source Files\World</Filter>
     </ClInclude>
@@ -100,6 +103,12 @@
     </ClInclude>
     <ClInclude Include="Source\Input\InputBinding.h">
       <Filter>Source Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameModes\BattleMode.h">
+      <Filter>Source Files\GameModes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameModes\GameMode.h">
+      <Filter>Source Files\GameModes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -15,16 +15,15 @@ Bullet::Bullet()
 void Bullet::Update(const float deltaTime)
 {
 	WorldObject::Update(deltaTime);
-	if (mIsBeingKilled && mTrail.size() == 0)
+	if (!mIsAlive && mTrail.size() == 0)
 	{
-		mIsAlive = false;
+		Destroy();
 	}
 }
 
 void Bullet::Kill()
 {
-	// dont set isalive false yet, not until the trail has completed
-	mIsBeingKilled = true;
+	WorldObject::Kill();
 	SetIsPhysicsEnabled(false);
 	SetIsCollisionEnabled(false);
 }
@@ -51,7 +50,7 @@ void Bullet::OnLeaveWorldBounds()
 
 void Bullet::Draw(sf::RenderWindow* drawWindow)
 {
-	if (!mIsBeingKilled)
+	if (mIsAlive)
 	{
 		WorldObject::Draw(drawWindow);
 	}
@@ -86,13 +85,13 @@ void Bullet::UpdateVisual()
 		{
 			sf::Vertex& vertex = mTrail[i][j];
 			sf::Color& vertexColour = vertex.color;
-			int fadeFactor = mIsBeingKilled ? 2 : 1;
+			int fadeFactor = !mIsAlive ? 2 : 1;
 			vertexColour.a = std::max(0, vertexColour.a - fadeFactor * 256 / mMaxNumTrailVertices);
 			vertexColour.b = std::min(64, vertexColour.b + fadeFactor * 64 / mMaxNumTrailVertices);
 			//vertexColour.g = std::min(255, vertexColour.g + fadeFactor * 256 / mMaxNumTrailVertices);
 		}
 	}
-	if (totalTrailLength >= mMaxNumTrailVertices || mIsBeingKilled)
+	if (totalTrailLength >= mMaxNumTrailVertices || !mIsAlive)
 	{
 		// destroy last vertex, if segment is now empty then destroy the segment
 		std::vector<sf::Vertex>& lastTrailSegment = mTrail[mTrail.size() - 1];
@@ -106,7 +105,7 @@ void Bullet::UpdateVisual()
 		}
 	}
 
-	if (!mIsBeingKilled)
+	if (mIsAlive)
 	{
 		// add new vertex at current position to front of first segment
 		Vector2D newTrailPos = mWorld->WorldToScreenPos(mPosition);
