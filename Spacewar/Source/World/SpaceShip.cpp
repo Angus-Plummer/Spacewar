@@ -6,7 +6,7 @@
 
 SpaceShip::SpaceShip()
 	: WorldObject()
-	, mAmmo(10)
+	, mAmmo(100)
 	, mHealth(0.0f)
 	, mFuel(100.0f)
 	, mShipWidth(20.f)
@@ -35,7 +35,7 @@ void SpaceShip::FireBullet()
 		
 		// create bullet and add to world
 		Bullet* bullet = new Bullet();
-		Vector2D firingPos = mPosition + ForwardVector() * mShipLength;
+		Vector2D firingPos = mPosition + ForwardVector() * mShipLength * 2.0f / 3.0f;
 		bullet->SetPosition(firingPos);
 		float bulletSpeed = 150.0f;
 		Vector2D bulletVelocity = (firingPos - mPosition).Normalised() * bulletSpeed;

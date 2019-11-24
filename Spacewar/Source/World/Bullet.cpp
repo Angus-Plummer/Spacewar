@@ -7,9 +7,26 @@ Bullet::Bullet()
 {
 	mIsPhysicsEnabled = true;
 	mIsCollisionEnabled = true;
-	mCollisionRadius = 3.0f;
+	mCollisionRadius = 2.0f;
 	SetupVisual();
 	mTrail.resize(1);
+}
+
+void Bullet::Update(const float deltaTime)
+{
+	WorldObject::Update(deltaTime);
+	if (mIsBeingKilled && mTrail.size() == 0)
+	{
+		mIsAlive = false;
+	}
+}
+
+void Bullet::Kill()
+{
+	// dont set isalive false yet, not until the trail has completed
+	mIsBeingKilled = true;
+	SetIsPhysicsEnabled(false);
+	SetIsCollisionEnabled(false);
 }
 
 void Bullet::OnCollision(WorldObject* collidingObject)
@@ -34,7 +51,11 @@ void Bullet::OnLeaveWorldBounds()
 
 void Bullet::Draw(sf::RenderWindow* drawWindow)
 {
-	WorldObject::Draw(drawWindow);
+	if (!mIsBeingKilled)
+	{
+		WorldObject::Draw(drawWindow);
+	}
+
 	// draw all trail segments
 	for (int i = 0; i < mTrail.size(); i++)
 	{
@@ -61,19 +82,35 @@ void Bullet::UpdateVisual()
 	for (int i = 0; i < mTrail.size(); i++)
 	{
 		totalTrailLength += (int) mTrail[i].size();
+		for (int j = 0; j < mTrail[i].size(); j++)
+		{
+			sf::Vertex& vertex = mTrail[i][j];
+			sf::Color& vertexColour = vertex.color;
+			int fadeFactor = mIsBeingKilled ? 2 : 1;
+			vertexColour.a = std::max(0, vertexColour.a - fadeFactor * 256 / mMaxNumTrailVertices);
+			vertexColour.b = std::min(64, vertexColour.b + fadeFactor * 64 / mMaxNumTrailVertices);
+			//vertexColour.g = std::min(255, vertexColour.g + fadeFactor * 256 / mMaxNumTrailVertices);
+		}
 	}
-	if (totalTrailLength >= mMaxNumTrailVertices)
+	if (totalTrailLength >= mMaxNumTrailVertices || mIsBeingKilled)
 	{
 		// destroy last vertex, if segment is now empty then destroy the segment
 		std::vector<sf::Vertex>& lastTrailSegment = mTrail[mTrail.size() - 1];
-		lastTrailSegment.pop_back();
+		if (lastTrailSegment.size() > 0)
+		{
+			lastTrailSegment.pop_back();
+		}
 		if (lastTrailSegment.size() == 0)
 		{
 			mTrail.pop_back();
 		}
 	}
-	// add new vertex at current position to front of first segment
-	Vector2D newTrailPos = mWorld->WorldToScreenPos(mPosition);
-	sf::Vertex newVertex(sf::Vector2f(newTrailPos.X, newTrailPos.Y), sf::Color::Red);
-	mTrail[0].insert(mTrail[0].begin(), newVertex);
+
+	if (!mIsBeingKilled)
+	{
+		// add new vertex at current position to front of first segment
+		Vector2D newTrailPos = mWorld->WorldToScreenPos(mPosition);
+		sf::Vertex newVertex(sf::Vector2f(newTrailPos.X, newTrailPos.Y), sf::Color::Red);
+		mTrail[0].insert(mTrail[0].begin(), newVertex);
+	}
 }

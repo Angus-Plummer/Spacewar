@@ -35,7 +35,7 @@ void Debris::UpdatePhysics(const float deltaTime)
 
 sf::Shape * Debris::GenerateModel() const
 {
-	int numSides = 3 + rand() % 3;
+	int numSides = 4 + rand() % 3;
 	sf::CircleShape* debrisModel = new sf::CircleShape(mSize, numSides);
 
 	// set origin 
