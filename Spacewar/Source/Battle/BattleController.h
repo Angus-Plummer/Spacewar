@@ -15,9 +15,12 @@ public:
 	void SetShip(SpaceShip* newShip);
 	SpaceShip* GetShip() const;
 protected:
-	virtual void SetupInput();
-	virtual void CreateInputBinding(InputAction action, sf::Keyboard::Key key, KeyEventType eventType, BattleInputFunction boundFunction);
-	std::map<InputAction, std::map<KeyEventType, BattleInputFunction>> mActionMappings;
+	virtual void SetupInput() override;
+	virtual bool CreateInputBinding(InputAction action, KeyEventType eventType, BattleInputFunction boundFunction);
+	std::map<InputAction, std::map<KeyEventType, BattleInputFunction>> mBattleActionMappings;
+
+	static const std::map<int, std::map<InputAction, sf::Keyboard::Key>> kBattleKeyBindings;
+	bool GetKeyForAction(InputAction action, sf::Keyboard::Key& key) const override;
 
 	SpaceShip* mShip;
 
@@ -31,6 +34,7 @@ protected:
 	void StopShipAntiClockwiseRotation();
 
 	void FireShipWeapon();
-
 };
+
+
 

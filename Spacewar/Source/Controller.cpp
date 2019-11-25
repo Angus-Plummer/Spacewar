@@ -3,7 +3,7 @@
 #include "Input/InputManager.h"
 
 Controller::Controller(int id) 
-	: mId(id)
+	: mPlayerId(id)
 {
 }
 
@@ -20,4 +20,10 @@ void Controller::RegisterInputBinding(InputAction action, sf::Keyboard::Key key)
 
 void Controller::SetupInput()
 {
+}
+
+bool Controller::GetKeyForAction(InputAction action, sf::Keyboard::Key & key) const
+{
+	// TODO: any shared inputs in menus and battle should go here
+	return false;
 }
