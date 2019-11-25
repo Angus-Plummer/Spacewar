@@ -71,8 +71,9 @@ protected:
 	void ApplyAttractors(std::vector<WorldObject*>& targetObjects);
 
 	// Drawable Implementation.
-protected:
+public:
 	virtual void Draw(sf::RenderWindow* drawWindow) override;
+protected:
 	sf::RectangleShape mBoxBounds;
 
 	void InitialiseBackground();

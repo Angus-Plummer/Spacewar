@@ -60,9 +60,6 @@ void World::Update(const float deltaTime)
 			star.setPosition(sf::Vector2f(starPos.X, starPos.Y));
 		}
 	}
-
-	sf::RenderWindow* gameWindow = GameInstance::GetGameWindow();
-	Draw(gameWindow);
 }
 
 Vector2D World::GetLowerBound() const
@@ -351,12 +348,12 @@ void World::Draw(sf::RenderWindow* drawWindow)
 	mBoxBounds.setOutlineThickness(2.0f);
 	drawWindow->draw(mBoxBounds);
 
-	Vector2D worldCentreScreenPos = WorldToScreenPos(Vector2D(0.0f, 0.0f));
-	sf::CircleShape screenCentreDot(3.0f, 5.0f);
-	screenCentreDot.setOrigin(3.0f, 3.0f);
-	screenCentreDot.setFillColor(sf::Color::White);
-	screenCentreDot.setPosition(worldCentreScreenPos.X, worldCentreScreenPos.Y);
-	drawWindow->draw(screenCentreDot);
+	//Vector2D worldCentreScreenPos = WorldToScreenPos(Vector2D(0.0f, 0.0f));
+	//sf::CircleShape screenCentreDot(3.0f, 5.0f);
+	//screenCentreDot.setOrigin(3.0f, 3.0f);
+	//screenCentreDot.setFillColor(sf::Color::White);
+	//screenCentreDot.setPosition(worldCentreScreenPos.X, worldCentreScreenPos.Y);
+	//drawWindow->draw(screenCentreDot);
 }
 
 void World::InitialiseBackground()
@@ -368,13 +365,13 @@ void World::InitialiseBackground()
 	primaryMovementDirection.Normalise();
 	float maxSpeed = 15.0f;
 	float angleSpread = 45.0f;
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		BackgroundStarLayer newStarLayer;
 		float angleDeviation = -(angleSpread / 2.0f) + angleSpread * (rand() % 1000 / 1000.0f);
 		float speed = maxSpeed * (rand() % 10000 / 10000.0f);
 		newStarLayer.Velocity = primaryMovementDirection.Rotated(angleDeviation) * speed;
-		for (int j = 0; j < 1; j++)
+		for (int j = 0; j < 10; j++)
 		{
 			float xPos = lowerScreenBound.X + rand() % (int)(upperScreenBound.X - lowerScreenBound.X);
 			float yPos = lowerScreenBound.Y + rand() % (int)(upperScreenBound.Y - lowerScreenBound.Y);

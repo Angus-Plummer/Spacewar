@@ -5,6 +5,17 @@
 class World;
 class BattleController;
 
+enum BattleState
+{
+	Initialising,
+	ReadyCheck,
+	Playing,
+	Paused,
+	RoundOver,
+	BattleOver,
+	Quitting
+};
+
 class BattleMode : public GameMode
 {
 public:
@@ -19,5 +30,10 @@ public:
 	BattleController* GetBattleController(int id) const;
 
 protected:
+	BattleState mState;
+	float mStateTimer;
 	World* mWorld;
+	bool IsRoundOver() const;
+
+	void SetupWorld();
 };

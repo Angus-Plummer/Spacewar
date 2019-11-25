@@ -37,7 +37,7 @@ void SpaceShip::FireBullet()
 		Bullet* bullet = new Bullet();
 		Vector2D firingPos = mPosition + ForwardVector() * mShipLength * 2.0f / 3.0f;
 		bullet->SetPosition(firingPos);
-		float bulletSpeed = 150.0f;
+		float bulletSpeed = 250.0f;
 		Vector2D bulletVelocity = (firingPos - mPosition).Normalised() * bulletSpeed;
 		bulletVelocity += ForwardVector() * std::max(0.0f, ForwardVector().DotProd(mVelocity));
 		bullet->SetVelocity(bulletVelocity);
