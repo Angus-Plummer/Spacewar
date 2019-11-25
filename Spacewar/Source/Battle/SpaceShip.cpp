@@ -96,7 +96,7 @@ void SpaceShip::Kill()
 {
 	WorldObject::Kill();
 	
-	int numPieces = 32;
+	int numPieces = 64;
 	GenerateDebris(numPieces);
 
 	SetIsPhysicsEnabled(false);

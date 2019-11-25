@@ -371,7 +371,7 @@ void World::InitialiseBackground()
 		float angleDeviation = -(angleSpread / 2.0f) + angleSpread * (rand() % 1000 / 1000.0f);
 		float speed = maxSpeed * (rand() % 10000 / 10000.0f);
 		newStarLayer.Velocity = primaryMovementDirection.Rotated(angleDeviation) * speed;
-		for (int j = 0; j < 10; j++)
+		for (int j = 0; j < 15; j++)
 		{
 			float xPos = lowerScreenBound.X + rand() % (int)(upperScreenBound.X - lowerScreenBound.X);
 			float yPos = lowerScreenBound.Y + rand() % (int)(upperScreenBound.Y - lowerScreenBound.Y);
