@@ -7,10 +7,10 @@ int main()
 	sf::Clock clock;
 	GameInstance* activeGameInstance = new GameInstance();
 	activeGameInstance->Initialise();
-
+	sf::Time elapsed = clock.restart();
 	while (activeGameInstance->GetIsRunning())
 	{
-		sf::Time elapsed = clock.restart();
+		elapsed = clock.restart();
 		activeGameInstance->Update(elapsed.asSeconds());
 	}
 

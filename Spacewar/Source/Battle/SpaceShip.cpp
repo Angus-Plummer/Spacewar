@@ -96,7 +96,7 @@ void SpaceShip::Kill()
 {
 	WorldObject::Kill();
 	
-	int numPieces = 128;
+	int numPieces = 32;
 	GenerateDebris(numPieces);
 
 	SetIsPhysicsEnabled(false);
@@ -202,9 +202,9 @@ sf::Shape* SpaceShip::GenerateModel() const
 	return shipModel;
 }
 
-void SpaceShip::UpdateVisual()
+void SpaceShip::UpdateVisual(const float deltaTime)
 {
-	WorldObject::UpdateVisual();
+	WorldObject::UpdateVisual(deltaTime);
 
 	if (mIsThrustersEnabled)
 	{

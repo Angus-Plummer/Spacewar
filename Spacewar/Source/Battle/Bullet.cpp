@@ -72,9 +72,9 @@ sf::Shape* Bullet::GenerateModel() const
 	return bulletModel;
 }
 
-void Bullet::UpdateVisual()
+void Bullet::UpdateVisual(const float deltaTime)
 {
-	WorldObject::UpdateVisual();
+	WorldObject::UpdateVisual(deltaTime);
 
 	// destroy last element in trail and add current position to the front
 	int totalTrailLength = 0;

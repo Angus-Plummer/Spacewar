@@ -57,16 +57,28 @@ void BattleMode::Initialise()
 		}
 	}
 
-	// create the stars
-	Attractor* star1 = new Attractor(2.0f);
-	//star1->SetPosition(Vector2D(0.0f, 0.0f));
-	star1->SetPosition(Vector2D(-200.0f, 0.0f));
-	star1->SetVelocity(Vector2D(0.0f, -50.0f));
-	mWorld->AddAttractor(star1);
+	// create binary stars
+	float separation = 150.0f; // = r1 + r2
+	Attractor* star1 = new Attractor(1.0f);
+	Attractor* star2 = new Attractor(1.0f);
+	star1->SetMass(10000000.0f);
+	star2->SetMass(10000000.0f);
+	
+	//float orbitalRadiusRatio = sqrt((star1->GetAttractionFactor() * star1->GetMass()) / (star2->GetAttractionFactor() * star2->GetMass())); // = r1/r2
+	float orbitalRadiusRatio = (star1->GetAttractionFactor() * star1->GetMass()) / (star2->GetAttractionFactor() * star2->GetMass()); // = r1/r2
 
-	Attractor* star2 = new Attractor(2.0f);
-	star2->SetPosition(Vector2D(200.0f, 0.0f));
-	star2->SetVelocity(Vector2D(0.0f, 50.0f));
+	float r1 = separation / (1.0f + orbitalRadiusRatio);
+	float r2 = separation - r1;
+	star1->SetPosition(Vector2D(-r1 , 0.0f));
+	star2->SetPosition(Vector2D(r2, 0.0f));
+
+	float v1 = sqrt(star2->GetAttractionFactor() * star2->GetMass() * r1) / separation;
+	float v2 = r2 / r1 * v1;
+
+	star1->SetVelocity(Vector2D(0.0f, v1));
+	star2->SetVelocity(Vector2D(0.0f, -v2));
+
+	mWorld->AddAttractor(star1);
 	mWorld->AddAttractor(star2);
 }
 

@@ -49,7 +49,7 @@ protected:
 	float mShipWidth;
 	float mShipLength;
 	virtual sf::Shape* GenerateModel() const override;
-	virtual void UpdateVisual() override;
+	virtual void UpdateVisual(const float deltaTime) override;
 
 	// thrusters
 	std::vector<sf::Shape*> mThrustersModel;

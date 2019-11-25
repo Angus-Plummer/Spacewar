@@ -81,7 +81,7 @@ public:
 protected:
 	sf::Shape* mModel; // main visual components
 	sf::FloatRect mCollisionRect;
-	virtual void UpdateVisual();
+	virtual void UpdateVisual(const float deltaTime);
 	virtual void SetupVisual();
 	virtual sf::Shape* GenerateModel() const = 0; // generate model, can include randomness
 };

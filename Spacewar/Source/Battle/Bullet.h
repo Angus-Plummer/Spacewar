@@ -22,7 +22,7 @@ public:
 	virtual void Draw(sf::RenderWindow* drawWindow) override;
 protected:
 	virtual sf::Shape* GenerateModel() const override;
-	virtual void UpdateVisual() override;
+	virtual void UpdateVisual(const float deltaTime) override;
 
 	// movement trail
 	int mMaxNumTrailVertices = 20;

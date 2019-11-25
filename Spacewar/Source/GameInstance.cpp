@@ -2,6 +2,7 @@
 #include "Battle/BattleMode.h"
 #include <SFML/Window.hpp>
 #include "Input/InputManager.h"
+#include <iostream>
 
 sf::RenderWindow* GameInstance::kGameWindow = nullptr;
 InputManager* GameInstance::kInputManager = nullptr;
@@ -68,6 +69,8 @@ void GameInstance::Update(const float deltaTime)
 
 	if (mIsRunning && mWindowHasFocus)
 	{
+		std::cout << "fps = " << 1.0f / deltaTime << "\n";
+		
 		kGameWindow->clear();
 
 		mGameMode->Update(deltaTime);

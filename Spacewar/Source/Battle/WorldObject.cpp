@@ -31,7 +31,7 @@ void WorldObject::Update(const float deltaTime)
 	{
 		UpdatePhysics(deltaTime);
 	}
-	UpdateVisual();
+	UpdateVisual(deltaTime);
 
 	if (!mWorld->IsWithinBounds(mPosition))
 	{
@@ -205,7 +205,7 @@ void WorldObject::Draw(sf::RenderWindow* drawWindow)
 	}
 }
 
-void WorldObject::UpdateVisual()
+void WorldObject::UpdateVisual(const float deltaTime)
 {
 	// set the underlying drawn shape's properties to those of the game object
 	if (mModel)

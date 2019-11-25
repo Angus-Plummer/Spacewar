@@ -240,20 +240,19 @@ void World::ApplyCollisions()
 {
 	std::vector<WorldObject*> worldObjects = GetAllObjectsInWorld();
 	
+
 	// all - attractor collisions
-	for (int i = 0; i < worldObjects.size(); i++)
+	for (auto objectIter = worldObjects.begin(); objectIter != worldObjects.end(); ++objectIter)
 	{
-		WorldObject* currentObject = worldObjects[i];
-		if (currentObject->GetIsCollisionEnabled())
+		if ((*objectIter)->GetIsCollisionEnabled())
 		{
-			for (int j = 0; j < mAttractors.size(); j++)
+			for (auto attrIter = mAttractors.begin(); attrIter != mAttractors.end(); ++attrIter)
 			{
-				Attractor* attractor = mAttractors[j];
-				ApplyCollision(currentObject, attractor);
+				ApplyCollision(*objectIter, *attrIter);
 			}
 		}
 	}
-
+	
 	// bullet + ship - ship collisions
 	for (int i = 0; i < mShips.size(); i++)
 	{
@@ -351,6 +350,13 @@ void World::Draw(sf::RenderWindow* drawWindow)
 	mBoxBounds.setOutlineColor(sf::Color::White);
 	mBoxBounds.setOutlineThickness(2.0f);
 	drawWindow->draw(mBoxBounds);
+
+	Vector2D worldCentreScreenPos = WorldToScreenPos(Vector2D(0.0f, 0.0f));
+	sf::CircleShape screenCentreDot(3.0f, 5.0f);
+	screenCentreDot.setOrigin(3.0f, 3.0f);
+	screenCentreDot.setFillColor(sf::Color::White);
+	screenCentreDot.setPosition(worldCentreScreenPos.X, worldCentreScreenPos.Y);
+	drawWindow->draw(screenCentreDot);
 }
 
 void World::InitialiseBackground()
@@ -362,13 +368,13 @@ void World::InitialiseBackground()
 	primaryMovementDirection.Normalise();
 	float maxSpeed = 15.0f;
 	float angleSpread = 45.0f;
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 1; i++)
 	{
 		BackgroundStarLayer newStarLayer;
 		float angleDeviation = -(angleSpread / 2.0f) + angleSpread * (rand() % 1000 / 1000.0f);
 		float speed = maxSpeed * (rand() % 10000 / 10000.0f);
 		newStarLayer.Velocity = primaryMovementDirection.Rotated(angleDeviation) * speed;
-		for (int j = 0; j < 30; j++)
+		for (int j = 0; j < 1; j++)
 		{
 			float xPos = lowerScreenBound.X + rand() % (int)(upperScreenBound.X - lowerScreenBound.X);
 			float yPos = lowerScreenBound.Y + rand() % (int)(upperScreenBound.Y - lowerScreenBound.Y);

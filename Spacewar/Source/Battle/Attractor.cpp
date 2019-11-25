@@ -54,9 +54,6 @@ void Attractor::ApplyForce(WorldObject* otherObject)
 void Attractor::UpdatePhysics(const float deltaTime)
 {
 	WorldObject::UpdatePhysics(deltaTime);
-	// random rotation frequency changes recreates flickering effect of star regardless of display refresh rate
-	float frequency = 2.0f + 10.0f * (rand() % 10000 / 10000.0f);
-	mRotation += deltaTime * frequency * 360.0f;
 }
 
 void Attractor::Draw(sf::RenderWindow* drawWindow)
