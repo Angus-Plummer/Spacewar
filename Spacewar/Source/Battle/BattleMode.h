@@ -1,7 +1,9 @@
 #pragma once
-#include "GameMode.h"
+#include "../GameMode.h"
+#include <map>
 
 class World;
+class BattleController;
 
 class BattleMode : public GameMode
 {
@@ -13,6 +15,8 @@ public:
 	virtual void Update(const float deltaTime) override;
 
 	World* GetWorld() const;
+
+	BattleController* GetBattleController(int id) const;
 
 protected:
 	World* mWorld;

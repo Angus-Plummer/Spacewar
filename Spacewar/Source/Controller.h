@@ -1,4 +1,7 @@
 #pragma once
+#include "Input/InputAction.h"
+#include "Input/KeyEventType.h"
+#include "SFML/Window/Keyboard.hpp"
 
 class SpaceShip;
 
@@ -7,25 +10,14 @@ class Controller
 public:
 	Controller(int id);
 
-	void Initialise();
+	virtual void Initialise();
 
-	void SetShip(SpaceShip* newShip);
-	SpaceShip* GetShip() const;
+	virtual void ProcessInputAction(InputAction action, KeyEventType keyEvent) = 0;
+
 protected:
 	int mId;
-	SpaceShip* mShip;
 
-	void SetupInput();
+	void RegisterInputBinding(InputAction action, sf::Keyboard::Key key);
 
-	void EnableShipThrusters();
-	void DisableShipThrusters();
-
-	void StartShipClockwiseRotation();
-	void StopShipClockwiseRotation();
-
-	void StartShipAntiClockwiseRotation();
-	void StopShipAntiClockwiseRotation();
-
-	void FireShipWeapon();
-
+	virtual void SetupInput();
 };

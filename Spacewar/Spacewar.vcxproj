@@ -19,35 +19,39 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Battle\Attractor.cpp" />
+    <ClCompile Include="Source\Battle\BattleController.cpp" />
+    <ClCompile Include="Source\Battle\BattleMode.cpp" />
+    <ClCompile Include="Source\Battle\Bullet.cpp" />
+    <ClCompile Include="Source\Battle\Debris.cpp" />
+    <ClCompile Include="Source\Battle\SpaceShip.cpp" />
+    <ClCompile Include="Source\Battle\World.cpp" />
+    <ClCompile Include="Source\Battle\WorldObject.cpp" />
     <ClCompile Include="Source\Controller.cpp" />
     <ClCompile Include="Source\GameInstance.cpp" />
-    <ClCompile Include="Source\GameModes\BattleMode.cpp" />
-    <ClCompile Include="Source\GameModes\GameMode.cpp" />
+    <ClCompile Include="Source\GameMode.cpp" />
     <ClCompile Include="Source\Input\InputManager.cpp" />
     <ClCompile Include="Source\Math\Vector2D.cpp" />
     <ClCompile Include="Source\Spacewar.cpp" />
-    <ClCompile Include="Source\World\Attractor.cpp" />
-    <ClCompile Include="Source\World\Bullet.cpp" />
-    <ClCompile Include="Source\World\Debris.cpp" />
-    <ClCompile Include="Source\World\World.cpp" />
-    <ClCompile Include="Source\World\WorldObject.cpp" />
-    <ClCompile Include="Source\World\SpaceShip.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Battle\Attractor.h" />
+    <ClInclude Include="Source\Battle\BattleController.h" />
+    <ClInclude Include="Source\Battle\BattleMode.h" />
+    <ClInclude Include="Source\Battle\Bullet.h" />
+    <ClInclude Include="Source\Battle\Debris.h" />
+    <ClInclude Include="Source\Battle\SpaceShip.h" />
+    <ClInclude Include="Source\Battle\World.h" />
+    <ClInclude Include="Source\Battle\WorldObject.h" />
     <ClInclude Include="Source\Controller.h" />
     <ClInclude Include="Source\Drawable.h" />
     <ClInclude Include="Source\GameInstance.h" />
-    <ClInclude Include="Source\GameModes\BattleMode.h" />
-    <ClInclude Include="Source\GameModes\GameMode.h" />
+    <ClInclude Include="Source\GameMode.h" />
+    <ClInclude Include="Source\Input\InputAction.h" />
     <ClInclude Include="Source\Input\InputBinding.h" />
     <ClInclude Include="Source\Input\InputManager.h" />
+    <ClInclude Include="Source\Input\KeyEventType.h" />
     <ClInclude Include="Source\Math\Vector2D.h" />
-    <ClInclude Include="Source\World\Attractor.h" />
-    <ClInclude Include="Source\World\Bullet.h" />
-    <ClInclude Include="Source\World\Debris.h" />
-    <ClInclude Include="Source\World\World.h" />
-    <ClInclude Include="Source\World\WorldObject.h" />
-    <ClInclude Include="Source\World\SpaceShip.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

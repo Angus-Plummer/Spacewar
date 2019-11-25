@@ -1,14 +1,12 @@
 #pragma once
-#include "../Controller.h"
 #include <SFML/Window/Keyboard.hpp>
-#include <SFML/Window/Event.hpp>
+#include "InputAction.h"
 
-typedef void (Controller::*ControllerInputFunction)();
+class Controller;
 
 struct InputBinding
 {
-	Controller* BoundController = nullptr;
 	sf::Keyboard::Key Key;
-	ControllerInputFunction KeyPressFunction = nullptr;
-	ControllerInputFunction KeyReleaseFunction = nullptr;
+	Controller* Controller = nullptr;
+	InputAction Action;
 };

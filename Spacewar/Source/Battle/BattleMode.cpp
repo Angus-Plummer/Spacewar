@@ -1,11 +1,11 @@
 #include "BattleMode.h"
 #include "../GameInstance.h"
 #include "../Math/Vector2D.h"
-#include "../Controller.h"
-#include "../World/World.h"
-#include "../World/WorldObject.h"
-#include "../World/SpaceShip.h"
-#include "../World/Attractor.h"
+#include "BattleController.h"
+#include "World.h"
+#include "WorldObject.h"
+#include "SpaceShip.h"
+#include "Attractor.h"
 
 BattleMode::BattleMode(int numPlayers)
 	: GameMode()
@@ -22,6 +22,14 @@ BattleMode::~BattleMode()
 void BattleMode::Initialise()
 {
 	GameMode::Initialise();
+
+	// create the controllers
+	for (int i = 0; i < mNumPlayers; i++)
+	{
+		BattleController* playerController = new BattleController(i);
+		playerController->Initialise();
+		mControllers[i] = playerController;
+	}
 
 	// create the game world
 	mWorld = new World();
@@ -42,9 +50,10 @@ void BattleMode::Initialise()
 		spawnedShip->SetVelocity(Vector2D((float)(rand() % 100 - 50.0f), (float)(rand() % 100 - 50.0f)));
 		mWorld->AddShip(spawnedShip);
 
-		if (mControllers.count(i) == 1)
+		BattleController* battleController = GetBattleController(i);
+		if (battleController)
 		{
-			mControllers[i]->SetShip(spawnedShip);
+			battleController->SetShip(spawnedShip);
 		}
 	}
 
@@ -64,15 +73,17 @@ void BattleMode::Initialise()
 void BattleMode::Update(const float deltaTime)
 {
 	mWorld->Update(deltaTime);
-
-	for (std::map<int, Controller*>::iterator controllerIter = mControllers.begin(); controllerIter != mControllers.end(); ++controllerIter)
-	{
-
-	}
 }
 
 World* BattleMode::GetWorld() const
 {
 	return mWorld;
 
+}
+
+BattleController * BattleMode::GetBattleController(int id) const
+{
+	Controller* controller = GetController(id);
+	BattleController* battleController = dynamic_cast<BattleController*>(controller);
+	return battleController;
 }

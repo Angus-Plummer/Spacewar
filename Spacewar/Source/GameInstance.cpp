@@ -1,7 +1,5 @@
 #include "GameInstance.h"
-#include "GameModes/BattleMode.h"
-#include "World/World.h"
-#include "World/WorldObject.h"
+#include "Battle/BattleMode.h"
 #include <SFML/Window.hpp>
 #include "Input/InputManager.h"
 

@@ -1,29 +1,14 @@
 #include "InputManager.h"
+#include "KeyEventType.h"
+#include "../Controller.h"
 
-void InputManager::AddBinding(Controller * controller, sf::Keyboard::Key key, sf::Event::EventType eventType, ControllerInputFunction boundFunction)
+void InputManager::AddBinding(Controller* controller, sf::Keyboard::Key key, InputAction action)
 {
 	// overwrites any existing binding to this key
 	InputBinding& inputBinding = mInputBindings[key];
-	inputBinding.BoundController = controller;
+	inputBinding.Controller = controller;
+	inputBinding.Action = action;
 	inputBinding.Key = key;
-	switch (eventType)
-	{
-		case (sf::Event::KeyPressed):
-		{
-			inputBinding.KeyPressFunction = boundFunction;
-			break;
-		}
-		case (sf::Event::KeyReleased):
-		{
-			inputBinding.KeyReleaseFunction = boundFunction;
-			break;
-		}
-		default:
-		{
-			// error
-			break;
-		}
-	}
 }
 
 void InputManager::ProcessInput(sf::Keyboard::Key key, sf::Event::EventType eventType)
@@ -32,29 +17,29 @@ void InputManager::ProcessInput(sf::Keyboard::Key key, sf::Event::EventType even
 	if (iter != mInputBindings.end())
 	{
 		InputBinding binding = iter->second;
-		ControllerInputFunction boundFunction = nullptr;
+		KeyEventType keyEvent;
+
 		switch (eventType)
 		{
 			case (sf::Event::KeyPressed):
 			{
-				boundFunction = binding.KeyPressFunction;;
+				keyEvent = KeyDown;
 				break;
 			}
 			case (sf::Event::KeyReleased):
 			{
-				boundFunction = binding.KeyReleaseFunction;;
+				keyEvent = KeyUp;
 				break;
 			}
 			default:
 			{
 				// error
-				break;
+				return;
 			}
 		}
-		if (boundFunction)
+		if (binding.Controller)
 		{
-			// call the function on the controller
-			(binding.BoundController->*boundFunction)();
+			binding.Controller->ProcessInputAction(binding.Action, keyEvent);
 		}
 	}
 }

@@ -1,5 +1,4 @@
 #pragma once
-#include <vector>
 #include <map>
 
 class Controller;
@@ -14,7 +13,7 @@ public:
 
 	virtual void Update(const float deltaTime) = 0;
 
-	//std::vector<Controller*> GetControllers();
+	Controller* GetController(int id) const;
 
 protected:
 	int mNumPlayers;
