@@ -64,7 +64,7 @@ bool BattleController::GetKeyForAction(InputAction action, sf::Keyboard::Key& ke
 	if (!bIsKeyFound)
 	{
 		// find key in battle key bindings map
-		auto findPlayerMappingsIter = kBattleKeyBindings.find(mId);
+		auto findPlayerMappingsIter = kBattleKeyBindings.find(mPlayerId);
 		if (findPlayerMappingsIter != kBattleKeyBindings.end())
 		{
 			const std::map<InputAction, sf::Keyboard::Key> playerInputBindings = findPlayerMappingsIter->second;
